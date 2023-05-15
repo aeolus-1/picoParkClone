@@ -13,43 +13,156 @@ class imgSprite {
 var mainAtlas = createImgEle("atlas.png")
 
 var imagePosY = 0
-function drawSprite(id,pos) {
-    var spos = sprites[id]
-    drawImageTemp(v(
-        pos.x-(spriteSize.x/2),
-        pos.y-(spriteSize.y/2),
-    ),spos, spriteSize)
+function drawSprite(render, player) {
+    var ctx = render.ctx,
+        frameId = player.frame,
+        color = player.color,
+        pos = player.body.position,
+        spos = getSpritePosition(frameId, color, player)
+    drawImageTemp(ctx, v(
+        pos.x-(spos.size.x/2),
+        pos.y-(spos.size.y/2),
+    ),spos.pos, spos.size)
 }
-function drawImageTemp(pos,spos,size) {
+function drawImageTemp(ctx,pos,spos,size) {
     ctx.drawImage(mainAtlas,spos.x,spos.y,size.x,size.y,pos.x,pos.y, size.x,size.y)
     
 }
 
-function generateSprites(atlas, options) {
-    var sprites = {},
-        spriteSize = options.spriteSize,
+var spriteSize = v(40,46)
 
-    frames = Object.keys(options.sprites)
-
-    for (let i = 0; i < frames.length; i++) {
-        const frame = frames[i];
-        var pos = options.sprites[frame]
-        sprites[frame] = v(pos.x*spriteSize.x,pos.y*spriteSize.y)
+var sprites = {
+    "idle":{
+        count:8,
+        frames:[
+            
+            {
+                pos:v(34,56),
+                size:v(42,46),
+            },
+            {
+                pos:v(87,56),
+                size:v(42,46),
+            },
+            {
+                pos:v(136,56),
+                size:v(42,46),
+            },
+            {
+                pos:v(185,56),
+                size:v(42,46),
+            },
+            {
+                pos:v(234,56),
+                size:v(42,46),
+            },
+            {
+                pos:v(285,56),
+                size:v(42,46),
+            },
+            {
+                pos:v(335,56),
+                size:v(42,46),
+            },
+            {
+                pos:v(387,56),
+                size:v(42,46),
+            },
+            {
+                pos:v(438,56),
+                size:v(42,46),
+            },
+        ]
         
-    }
+    },
+    "falling":{
+        count:2,
+        frames:[
+            {
+                pos:v(613,120),
+                size:v(40,45),
+            },
+            {
+                pos:v(558,120),
+                size:v(39,45),
+            },
+            
+        ]
+        
+    },
+    "walking":{
+        count:9,
+        frames:[
+            {
+                pos:v(34,119),
+                size:v(40,46),
+            },
+            {
+                pos:v(87,119),
+                size:v(40,46),
+            },
+            {
+                pos:v(136,119),
+                size:v(40,46),
+            },
+            {
+                pos:v(185,119),
+                size:v(40,46),
+            },
+            {
+                pos:v(234,119),
+                size:v(40,46),
+            },
+            {
+                pos:v(285,119),
+                size:v(40,46),
+            },
+            {
+                pos:v(335,119),
+                size:v(40,46),
+            },
+            {
+                pos:v(387,119),
+                size:v(40,46),
+            },
+            {
+                pos:v(438,119),
+                size:v(40,46),
+            },
+            
+            
+            
+            
+            
+        ]
+        
+    },
     
-    window.spriteSize = spriteSize
-    window.sprites = sprites
+},
+    colorMods = {
+        "red":v(),
+        "blue":v(0, 252),
+        "yellow":v(0, 501),
+        "green":v(0, 750),
+        "orange":v(723, 0),
+        "pink":v(723, 252),
+        "purple":v(723, 501),
+        "gray":v(723, 750),
+    }
+
+function getSpritePosition(id, color, player) {
+
+    var frameData = sprites[id],
+        frameCount = frameData.count,
+        offset = ((player.body.id*7)%10),
+        choosenFrame = Math.floor(((((new Date()).getTime())/120)+offset)%frameCount)
+        positions = frameData.frames[choosenFrame]
+    return {
+        pos:v(
+            positions.pos.x+colorMods[color].x,
+            positions.pos.y+colorMods[color].y,
+        ),
+        size:positions.size
+    }
 }
-
-
-    generateSprites(mainAtlas, {
-        spriteSize:v(40,46),
-        sprites:{
-            "idle":v(0,0),
-            "walking1":v(0,1),
-            "walking2":v(1,1),
-            "jumping":v(2,1),
-        }
-    })
 

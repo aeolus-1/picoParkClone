@@ -5,6 +5,10 @@ function createElementFromHTML(htmlString) {
 	// Change this to div.childNodes to support multiple top-level nodes.
 	return div.firstChild;
   }
+
+function randChar() {
+	return (Math.random().toString(36).substr(2, 4)).toUpperCase()
+}
 function angleDifference( angle1, angle2 )
 {	
 	angle1 = angle1*(Math.PI/180)

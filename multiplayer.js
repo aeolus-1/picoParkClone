@@ -6,6 +6,18 @@ class Connection {
     this.conn = null;
     this.vanityId = id
 
+    this.e = {
+      connection:this,
+      onConnection:()=>{},
+      onOpening:()=>{},
+      onDisconnection:()=>{},
+      onData:()=>{},
+    }
+
+    this.send = (d)=>{
+      this.conn.send(d)
+    }
+
     this.online = false;
     this.joining = undefined;
   }
@@ -19,29 +31,24 @@ class Connection {
     this.peer.connection = this;
 
     this.peer.on("open", function (id) {
-      console.log(this);
       // Workaround for peer.reconnect deleting previous id
       if (this.id === null) {
-        console.log("Received null id from peer open");
         this.id = this.connection.lastPeerId;
       } else {
         this.connection.lastPeerId = this.id;
       }
 
       
-      console.log("Awaiting connection...");
       if (this.connection.joining) {
-          console.log("atemping to join ",this.connection.joining)
         this.connection.join(this.connection.joining);
       } else {
         if (this.connection.isBuffer) {
-          console.log("send reply buffer");
-          clientConnection.conn.send("buffer " + this.id);
+          //clientConnection.conn.send("buffer " + this.id);
         }
       }
+      this.connection.e.onOpening()  
     });
     this.peer.on("connection", function (c) {
-      console.log("connected");
       // Allow only a single connection
       this.connection.online = true;
 
@@ -59,12 +66,13 @@ class Connection {
       this.connection.conn.connection = this.connection;
       
 
-      console.log("Connected to: " + this.connection.conn.peer);
+      this.connection.e.onConnection()
 
       this.connection.ready();
+
     });
     this.peer.on("disconnected", function () {
-      console.log("Connection lost. Please reconnect");
+      this.connection.e.onDisconnection()
       this.connection.online = false;
       // Workaround for peer.reconnect deleting previous id
       this.id = this.connection.lastPeerId;
@@ -74,16 +82,15 @@ class Connection {
     this.peer.on("close", function () {
       this.connection.conn = null;
       this.connection.online = false;
-      console.log("Connection destroyed");
     });
     this.peer.on("error", function (err) {
-      console.log(err);
       alert("" + err);
     });
+    
   }
   ready() {
     this.conn.on("data", function (data) {
-        console.log(data)
+        this.connection.e.onData(data)
     });
     this.conn.on("close", function () {
       this.conn = null;
@@ -100,17 +107,12 @@ class Connection {
     //this.conn.connection = this;
 
     this.conn.on("open", function () {
-        console.log("Connected to: " + this.peer);
+      
+        this.connection.e.onConnection()
+
       
       
       
-      
-      if (this.connection.addBuffer) {
-        this.connection.buffer()
-      } else {
-        console.log("connection by buffer")
-        this.send("yay")
-      }
       
       //this.online = true;
       /*this.conn.on("data", function (data) {
@@ -122,4 +124,89 @@ class Connection {
     
     
   }
+}
+
+class Connection2W {
+  constructor() {
+    this.connS2T;
+    this.connT2S;
+    this.selfId;
+    this.fullyConnected = false;
+  }
+  open(id=null, twC=false) {
+    this.selfId = id
+    this.connS2T = new Connection(id)
+    this.connS2T.twC = this
+    this.connS2T.initialize()
+    this.connS2T.e.onOpening=function(){
+      console.log("opened joinConn on id: ",this.connection.lastPeerId)
+      
+
+    }
+    if (twC) {
+
+      this.connS2T.e.onConnection=function(){
+        this.connection.twC.fullyConnected = true
+        console.log("fullyConnected")
+      }
+
+
+    }
+
+    this.connS2T.e.onData=function(d) {
+      let self = this.connection.twC
+      self.processData(d)
+    }
+    
+  }
+  connect(id, twC=false) {
+    this.connT2S = new Connection()
+    this.connT2S.twC = this
+    this.connT2S.initialize(id)
+    if (!twC) {
+        this.connT2S.e.onConnection=function(){
+        this.connection.twC.open(null, true)
+        this.connection.twC.connS2T.e.onOpening=function(){
+          var newId = this.connection.twC.connS2T.lastPeerId
+          this.connection.twC.connT2S.send(JSON.stringify({
+            connectToNow:newId,
+            content:{},
+          }))
+
+        }
+
+      }
+    } else {
+      
+      this.connT2S.e.onConnection=function(){
+        this.connection.twC.fullyConnected = true
+        console.log("fullyConnected")
+
+      }
+    }
+
+
+  }
+  
+  processData(d) {
+    d = JSON.parse(d)
+    if (d.connectToNow) {
+      this.connect(d.connectToNow, true)
+    } else {
+      console.log(d.content)
+    }
+  }
+
+
+  send(d) {
+    if (this.fullyConnected) {
+      this.connT2S.send(JSON.stringify({
+        content:d,
+      }))
+    } else {
+      console.error("2 way not fully connected")
+    }
+  }
+
+
 }

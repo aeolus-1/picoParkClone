@@ -3,34 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pico</title>
-    <script src="common.js"></script>
-    <script src="matter.min.js"></script>
-    <script src="ressurect.js"></script>
-    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
-
-    <style>
-        body {
-            margin: 0%;
-            overflow: hidden;
-        }
-    </style>
+    <title>Document</title>
 </head>
 <body>
-
-    <script src="multiplayer.js"></script>
-
-    <script src="levels.js"></script>
-    <script src="level.js"></script>
-
-    <script src="matterInit.js"></script>
-    <script src="atlasSetup.js"></script>
-
-    <script src="controls.js"></script>
-    <script src="update.js"></script>
-
-    <script src="player.js"></script>
-    <script src="render.js"></script>
-
+    <h1>Mico Mark</h1>
+    Host Game <button>Create Room</button><br>
+    Join Game <input type="text"><button onClick="(function(){
+        window.open('./game.html#join=abcd','_self')
+        return false;
+    })();return false;">Join</button>
 </body>
 </html>
