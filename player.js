@@ -60,6 +60,7 @@ class Player {
         options = {
             color:"red",
             controls:["N","N","N","N"],
+            bodyOptions:{},
             ...options,
         }
         this.color = options.color
@@ -73,10 +74,15 @@ class Player {
         this.keys = {}
 
         let debug = 0
+        
 
         this.direction = 1
 
-        this.body = this.game.matter.addBody(v(200,-(Math.random()*800)),v(40,46),{isStatic:false,render:{visible:debug}})
+        this.body = this.game.matter.addBody(v(200,-(Math.random()*200)),v(40,46),{
+            ...options.bodyOptions,
+            inertia:Infinity,
+            
+            isStatic:false,render:{visible:debug}})
         this.body.player = this
 
         this.frame = "idle"
@@ -87,10 +93,12 @@ class Player {
                 catagory:2,
                 mask:0,
             },
+
             noGravity:true,
             render:{visible:debug}
         })
-        Matter.Body.scale(this.groundDetector, 1.75,0.5)
+        this.groundDetector.player = this
+        Matter.Body.scale(this.groundDetector, 1.45,0.5)
         
     }
     testFalling() {
@@ -116,20 +124,61 @@ class Player {
     }
 
     moveHor(dir) {
-        Matter.Body.setPosition(this.body, v(this.body.position.x+(dir*3),this.body.position.y))
+        let speed = 3.5,
+            diff = 1
+        Matter.Body.setPosition(this.body, v(this.body.position.x+(dir*speed),this.body.position.y))
+        if (this.testPlayerCollision()) {
+            diff = 0
+            Matter.Body.setPosition(this.body, v(this.body.position.x-(dir*speed),this.body.position.y))
+        }
+        var playersOnTop = this.findPlayerGroundDectors()
+        for (let i = 0; i < playersOnTop.length; i++) {
+            var bodyIs = (playersOnTop[i].bodyA.label!="Rectangle Body")?"bodyA":"bodyB"
+            var player = playersOnTop[i][bodyIs].player;
+            //player.frame = "walking"
+            player.moveHor(dir)
+            //player.moveHor(dir*diff)
+        }
+        
+        //Matter.Body.setVelocity(this.body, v((dir*speed)+this.body.velocity.x,this.body.velocity.y))
         this.direction = Math.sign(dir)
         this.updatePlayerParts()
     }
+    findPlayerGroundDectors() {
+        var players = this.game.players,
+            dectors = []
+        for (let i = 0; i < players.length; i++) {
+            const player = players[i];
+            if (player.body.id!=this.body.id) dectors.push(player.groundDetector)
+        }
+
+        return Matter.Query.collides(this.body, dectors)
+    }
+    testPlayerCollision() {
+        Matter.Body.scale(this.body, 1,0.5)
+        var ret = Matter.Query.collides(this.body, Matter.Composite.allBodies(this.game.matter.engine.world).filter((a)=>{return a.id!=this.body.id&&a.isStatic}))
+        Matter.Body.scale(this.body, 1,2)
+        return ret.length>0
+    }
     jump() {
         Matter.Body.setVelocity(this.body, v(this.body.velocity.x,-13))
-        this.updatePlayerParts()
+        //this.updatePlayerParts()
     }
 
     updatePlayerParts() {
+        Matter.Body.setAngle(this.body, 0)
+        Matter.Body.setAngularVelocity(this.body, 0)
+        Matter.Common.set(this.body, "anglePrev", 0)
+        Matter.Common.set(this.body, "angularSpeed", 0)
+        
         Matter.Body.setPosition(this.groundDetector, v(this.body.position.x,this.body.position.y+(spriteSize.y*0.5)))
-        Matter.Body.setVelocity(this.body, v(0,this.body.velocity.y))
+        Matter.Body.setVelocity(this.body, v(this.body.velocity.x*0,this.body.velocity.y))
 
+        
+        
     }
+
+  
 }
 
 

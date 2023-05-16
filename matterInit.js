@@ -6,10 +6,14 @@ var Engine = Matter.Engine,
 Composites = Matter.Composites;
 Constraint = Matter.Constraint;
 
+Matter.Common.nextId = function(){return crypto.randomUUID()}
+
 class MatterHandler {
   constructor(game, options) {
     this.game = game
-    this.engine = Engine.create();
+    this.engine = Engine.create({
+      velocityIterations:4,
+    });
     this.engine.gravity.scale *= 2
 
     this.running = false
@@ -26,11 +30,13 @@ class MatterHandler {
   addBody(pos,size,options) {
     var rect = Bodies.rectangle(pos.x,pos.y,size.x,size.y,{
         inertia:Infinity,
-        friction:0,
-        frictionStatic:0,
+        friction:1,
+        frictionStatic:1,
         //frictionAir:1
+        //slop:1,
+        //restitution:0.2,
         collisionFilter:{
-            group:1
+            //group:1
         },
         ...options,
     })

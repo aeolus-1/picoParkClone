@@ -128,12 +128,7 @@ var sprites = {
             {
                 pos:v(438,119),
                 size:v(40,46),
-            },
-            
-            
-            
-            
-            
+            },            
         ]
         
     },
@@ -154,7 +149,7 @@ function getSpritePosition(id, color, player) {
 
     var frameData = sprites[id],
         frameCount = frameData.count,
-        offset = ((player.body.id*7)%10),
+        offset = 0,
         choosenFrame = Math.floor(((((new Date()).getTime())/120)+offset)%frameCount)
         positions = frameData.frames[choosenFrame]
     return {

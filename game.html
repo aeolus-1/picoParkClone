@@ -48,6 +48,8 @@
 
     <script src="game.js"></script>
 
+    <script src="constraints.js"></script>
+
     <script src="host.js"></script>
     <script src="client.js"></script>
 
@@ -77,11 +79,20 @@
         function initGame() {
             window.mainGame = new Game()
 
+            var player1 = mainGame.playerhandler.addPlayer({
+            controls:["arrowleft","arrowright","arrowup","arrowdown"],
+            keys:keys,
+        }) 
+
             window.hostConnection;window.clientConnection
             if (urlData.host) {hostConnection = new Host(mainGame);hostConnection.init()}
-            if (urlData.join) {clientConnection = new Client(mainGame);clientConnection.init()}
-
+            if (urlData.join) {clientConnection = new Client(mainGame,player1);clientConnection.init(urlData.join)}
             
+
+            setInterval(() => {
+                if (window.hostConnection) hostConnection.updateClients()
+                if (window.clientConnection) clientConnection.updateHost()
+            }, 10);
             
         }
         function startMainGame() {

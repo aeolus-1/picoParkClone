@@ -27,11 +27,11 @@ class LevelHandler {
     
                 let options = {
                     isStatic:true,
-                    collisionFilter:{
-                        group:1
-                    },
-                    frictionStatic:0,
-                    friction:0,
+                    //noGravity:true,
+
+                    frictionStatic:1,
+                    friction:1,
+                    //slop:1,
                     render:{
                         visible:false,
                     }

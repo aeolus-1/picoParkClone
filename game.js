@@ -6,14 +6,17 @@ class Game {
 
         this.mobile = []
         this.players = []
+        this.constraints = []
 
         this.matter = new MatterHandler(this)
         this.playerhandler = new PlayerHandler(this)
         this.levelHandler = new LevelHandler(this)
         this.renderer = new Renderer(this)
+        this.constraintHandler = new ConstraintHandler(this)
 
         this.updateMobiles = function(self){
             self.playerhandler.updatePlayers()
+            self.constraintHandler.updateConstraints()
         }
     }
 
@@ -31,17 +34,18 @@ class Game {
     testInit() {
         this.initPhysics()
             //addBody(v(0,500),v(2000,50),{isStatic:true,render:levelRender})
-        this.playerhandler.addPlayer({
-            controls:["arrowleft","arrowright","arrowup","arrowdown"],
-            keys:keys,
-        }) 
-        this.playerhandler.addPlayer({
-            controls:["j","l","i","k"],
-            color:"green",
-        }) 
+        
+        /*
+        
         this.playerhandler.addPlayer({
             controls:["a","d","w","s"],
             color:"orange",
+        }) 
+        
+
+        this.playerhandler.addPlayer({
+            controls:["j","l","i","k"],
+            color:"green",
         }) 
         
     
@@ -61,8 +65,26 @@ class Game {
         }) 
         this.playerhandler.addPlayer({
             color:"yellow",
-        }) 
+        }) */
 
         this.levelHandler.loadLevel(levels.one)
+
+        //this.bindPlayers(this.players)
+    }
+
+    bindPlayers(players) {
+        for (let i = 0; i < players.length-1; i++) {
+            const player = players[i];
+            this.constraintHandler.addConstraint({
+                bodyA:players[i],
+                bodyB:players[i+1],
+            })
+            this.constraintHandler.addConstraint({
+                bodyB:players[i],
+                bodyA:players[i+1],
+            })
+        }
+        
+                
     }
 }

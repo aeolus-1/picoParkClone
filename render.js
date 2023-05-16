@@ -22,12 +22,15 @@ class Renderer {
 
     renderLoop(self) {
         self.clearCanvas()
+        self.renderLevel(self.game.levelHandler)
+        self.renderConstraints()
+
         for (let i = 0; i < self.game.players.length; i++) {
             const player = self.game.players[i];
             self.renderPlayer(player)
         }
 
-        self.renderLevel(self.game.levelHandler)
+
 
         requestAnimationFrame(()=>{self.renderLoop(self)})
     }
@@ -41,6 +44,17 @@ class Renderer {
         drawSprite(this, player)
     
         this.ctx.restore()
+    }
+    renderConstraints() {
+        for (let i = 0; i < this.game.constraints.length; i++) {
+            const con = this.game.constraints[i];
+            this.ctx.beginPath()
+            this.ctx.moveTo(con.bodyA.body.position.x,con.bodyA.body.position.y)
+            this.ctx.lineTo(con.bodyB.body.position.x,con.bodyB.body.position.y)
+            this.ctx.stroke()
+            this.ctx.closePath()
+            
+        }
     }
     renderLevel(levelHandler) {
         var color = "rgb(255,134,77)",

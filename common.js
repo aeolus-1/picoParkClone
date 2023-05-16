@@ -182,7 +182,7 @@ function get3dDistance(x, y, z, a, b, c) {
 }
 
 function getAngle(x, y) {
-    return Math.atan2(x.x - y.x, x.y - y.y) / (Math.PI / 180)
+    return Math.atan2(x.x - y.x, x.y - y.y) 
 }
 
 function cos(num) {
