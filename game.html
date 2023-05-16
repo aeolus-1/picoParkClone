@@ -93,6 +93,10 @@
                 if (window.hostConnection) hostConnection.updateClients()
                 if (window.clientConnection) clientConnection.updateHost()
             }, 10);
+
+            setInterval(() => {
+                player1.updateKeys(keys)
+            }, 5);
             
         }
         function startMainGame() {

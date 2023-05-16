@@ -29,8 +29,8 @@ class LevelHandler {
                     isStatic:true,
                     //noGravity:true,
 
-                    frictionStatic:1,
-                    friction:1,
+                    //frictionStatic:1,
+                    //friction:1,
                     //slop:1,
                     render:{
                         visible:false,

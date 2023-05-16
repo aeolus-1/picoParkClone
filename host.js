@@ -91,6 +91,7 @@ class Host {
 
         Matter.Body.setPosition(foundPlayer.body, data.position)
         foundPlayer.direction = data.direction
+        foundPlayer.updateKeys(data.keys)
     
     }
     
@@ -117,6 +118,7 @@ class Host {
             id:p.body.id,
             position:p.body.position,
             direction:p.direction,
+            keys:p.keys,
            
         }
     }

@@ -25,7 +25,8 @@ class PlayerHandler {
         
     }
     updatePlayerControls(player) {
-        var c = player.controls
+        var c = player.controls,
+            keys = player.keys
 
         var walking = false
         
@@ -59,7 +60,7 @@ class Player {
         this.game = game
         options = {
             color:"red",
-            controls:["N","N","N","N"],
+            controls:["arrowleft","arrowright","arrowup","arrowdown"],
             bodyOptions:{},
             ...options,
         }
@@ -100,6 +101,9 @@ class Player {
         this.groundDetector.player = this
         Matter.Body.scale(this.groundDetector, 1.45,0.5)
         
+    }
+    updateKeys(keys) {
+        this.keys = {...keys}
     }
     testFalling() {
         Matter.Body.setPosition(this.body, v(

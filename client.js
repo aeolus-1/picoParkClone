@@ -34,6 +34,7 @@ class Client {
                 position:this.mainPlayer.body.position,
                 direction:this.mainPlayer.direction,
                 id:this.mainPlayer.body.id,
+                keys:this.mainPlayer.keys,
             }
         }))
     }
@@ -70,5 +71,6 @@ class Client {
     setPlayer(body, data) {
         Matter.Body.setPosition(body.body, data.position)
         body.direction = data.direction
+        body.updateKeys(data.keys)
     }
 }

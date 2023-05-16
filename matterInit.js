@@ -30,8 +30,8 @@ class MatterHandler {
   addBody(pos,size,options) {
     var rect = Bodies.rectangle(pos.x,pos.y,size.x,size.y,{
         inertia:Infinity,
-        friction:1,
-        frictionStatic:1,
+        //friction:1,
+        //frictionStatic:1,
         //frictionAir:1
         //slop:1,
         //restitution:0.2,
