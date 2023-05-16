@@ -86,7 +86,7 @@
 
             window.hostConnection;window.clientConnection
             if (urlData.host) {hostConnection = new Host(mainGame);hostConnection.init()}
-            if (urlData.join) {clientConnection = new Client(mainGame,player1);clientConnection.init(urlData.join)}
+            if (urlData.join) {startGame();clientConnection = new Client(mainGame,player1);clientConnection.init(urlData.join)}
             
 
             setInterval(() => {
