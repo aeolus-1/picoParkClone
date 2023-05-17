@@ -72,7 +72,7 @@ class Client {
 
                 }
 
-                if (foundPlayer.body.id!=this.mainPlayer.body.id||true) {
+                if (foundPlayer.body.id!=this.mainPlayer.body.id) {
                     this.setPlayer(foundPlayer, player)
                 }
             

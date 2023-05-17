@@ -28,7 +28,6 @@ class PlayerHandler {
         var c = player.controls,
             keys = player.keys
 
-            if (window.clientConnection) if (player.body.id == clientConnection.mainPlayer.body.id) return
 
         var walking = false
         
