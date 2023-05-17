@@ -90,6 +90,15 @@ var sprites = {
         ]
         
     },
+    "leaping":{
+        count:1,
+        frames:[
+            {
+                pos:v(557,55),
+                size:v(40,45)
+            },
+        ],
+    },
     "walking":{
         count:9,
         frames:[

@@ -12,9 +12,15 @@ class Host {
         setInterval(function(){
             if (window.hostConnection) {
                 if (!(window.hostConnection.roomJoinOnline || window.hostConnection.opening)) {
-                window.hostConnection.recycleJoinConn()
+                //window.hostConnection.recycleJoinConn()
             }}
         })
+    }
+    broadcast(data) {
+        for (let i = 0; i < this.connections.length; i++) {
+            const conn = this.connections[i];
+            conn.send(data)
+        }
     }
     recycleJoinConn() {
         this.joinConn = new Connection2W()
@@ -24,6 +30,7 @@ class Host {
         this.joinConn.e.onOpening = ()=>{
             this.roomJoinOnline = true
             this.opening = false
+            setRoomCode(this.joinConn.selfId)
 
         }
         this.joinConn.e.onConnection = ()=>{
@@ -51,7 +58,21 @@ class Host {
         connection.open()
 
         connection.e.onData = (d)=>{
-            this.updateClientBody(JSON.parse(d).player)
+            d = JSON.parse(d)
+
+            if (d.player) {
+                this.updateClientBody(d.player)
+            }
+            if (d.setUsername) {
+                connection.clientUsername = d.setUsername
+                addPlayerToMenu(d.setUsername)
+            }
+        }
+        connection.e.onConnection = (d)=>{
+            connection.send(JSON.stringify({
+                setColor:this.game.fetchColor(),
+            }))
+            //addPlayerToMenu("yay")
         }
         /*
         connection.e.onOpening = function () {
@@ -75,7 +96,6 @@ class Host {
         }
         const player = data;
         var playerId = player.id
-        console.log(data)
         var foundPlayer = findPlayerById(playerId)
         if (foundPlayer==undefined) {
             console.log(player.id)
@@ -85,13 +105,12 @@ class Host {
                     id:player.id,
                 },
             })
+            foundPlayer.onlinePlayer = true
         } else {
 
         }
 
-        Matter.Body.setPosition(foundPlayer.body, data.position)
-        foundPlayer.direction = data.direction
-        foundPlayer.updateKeys(data.keys)
+        setPlayerWithData(foundPlayer, data, false)
     
     }
     
@@ -99,7 +118,7 @@ class Host {
     updateClients() {
         for (let i = 0; i < this.connections.length; i++) {
             const conn = this.connections[i];
-            if (conn.fullyConnected) conn.send(JSON.stringify(this.getPlayersData()))
+            if (conn.fullyConnected) conn.send(JSON.stringify({playerData:this.getPlayersData()}))
         }
     }
     getPlayersData() {
@@ -114,12 +133,6 @@ class Host {
 
     }
     getPlayerData(p) {
-        return {
-            id:p.body.id,
-            position:p.body.position,
-            direction:p.direction,
-            keys:p.keys,
-           
-        }
+        return parsePlayerData(p)
     }
 }

@@ -55,23 +55,27 @@
 
     <script src="menu.js"></script>
 
-    <div id="menu">
+    <div id="menu">st
+        <a href="./index.html">Back to Home</a>
         <div id="host" style="display: none;">
             <div id="gameDetails">
-                <div id="gameCode">Code: <b>ABCD</b></div>
+                <div id="gameCode">Code: <b id="roomCode">fetching</b></div>
             </div>
             <div id="memberList" style="border: solid black 1px; width:200px">
                 <h2>Members:</h2>
-                1.
+                <div id="memberlist"></div>
 
             </div>
             <button onClick="(function(){
                 startGame()
+                hostConnection.broadcast(JSON.stringify({
+                    startGame:true,
+                }))
                 return false;
             })();return false;">Start Game</button>
             </div>
         <div id="join" style="display: none;">
-
+            Waiting for host to start (maybe idk really)
         </div>
     </div>
 
@@ -86,7 +90,7 @@
 
             window.hostConnection;window.clientConnection
             if (urlData.host) {hostConnection = new Host(mainGame);hostConnection.init()}
-            if (urlData.join) {startGame();clientConnection = new Client(mainGame,player1);clientConnection.init(urlData.join)}
+            if (urlData.join) {clientConnection = new Client(mainGame,player1);clientConnection.init(urlData.join)}
             
 
             setInterval(() => {
@@ -95,7 +99,7 @@
             }, 10);
 
             setInterval(() => {
-                player1.updateKeys(keys)
+                mainGame.players.forEach((e)=>{if(!e.onlinePlayer) e.updateKeys(keys)})
             }, 5);
             
         }

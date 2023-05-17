@@ -28,6 +28,8 @@ class PlayerHandler {
         var c = player.controls,
             keys = player.keys
 
+            if (window.clientConnection) if (player.body.id == clientConnection.mainPlayer.body.id) return
+
         var walking = false
         
         if (keys[c[0]]) {
@@ -78,6 +80,7 @@ class Player {
         
 
         this.direction = 1
+        this.scale = 1
 
         this.body = this.game.matter.addBody(v(200,-(Math.random()*200)),v(40,46),{
             ...options.bodyOptions,
@@ -85,6 +88,7 @@ class Player {
             
             isStatic:false,render:{visible:debug}})
         this.body.player = this
+        this.onlinePlayer = false
 
         this.frame = "idle"
         this.preFalling = false
@@ -114,7 +118,7 @@ class Player {
 
         var falling = !this.onGround()
         if (falling) {
-            this.frame = "falling"
+            this.frame = (Math.sign(this.body.velocity.y)>0)?"falling":"leaping"
         } else if (this.preFalling) {
             this.frame = "idle"
         }
@@ -128,7 +132,7 @@ class Player {
     }
 
     moveHor(dir) {
-        let speed = 3.5,
+        let speed = 2.75,
             diff = 1
         Matter.Body.setPosition(this.body, v(this.body.position.x+(dir*speed),this.body.position.y))
         if (this.testPlayerCollision()) {
@@ -174,12 +178,20 @@ class Player {
         Matter.Body.setAngularVelocity(this.body, 0)
         Matter.Common.set(this.body, "anglePrev", 0)
         Matter.Common.set(this.body, "angularSpeed", 0)
-        
-        Matter.Body.setPosition(this.groundDetector, v(this.body.position.x,this.body.position.y+(spriteSize.y*0.5)))
-        Matter.Body.setVelocity(this.body, v(this.body.velocity.x*0,this.body.velocity.y))
+
+        Matter.Common.set(this.body, "mass", 1)
 
         
+        Matter.Body.setPosition(this.groundDetector, v(this.body.position.x,this.body.position.y+(spriteSize.y*0.5*this.scale)))
+        Matter.Body.setVelocity(this.body, v(this.body.velocity.x*0,this.body.velocity.y))
         
+    }
+    setScale(targetScale) {
+        var scaleFactor = targetScale/this.scale
+        Matter.Body.scale(this.body, scaleFactor,scaleFactor)
+        Matter.Body.scale(this.groundDetector, scaleFactor,scaleFactor)
+
+        this.scale = targetScale
     }
 
   

@@ -12,7 +12,7 @@ class MatterHandler {
   constructor(game, options) {
     this.game = game
     this.engine = Engine.create({
-      velocityIterations:4,
+      velocityIterations:15,
     });
     this.engine.gravity.scale *= 2
 

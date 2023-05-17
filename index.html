@@ -7,10 +7,14 @@
 </head>
 <body>
     <h1>Mico Mark</h1>
-    Host Game <button>Create Room</button><br>
-    Join Game <input type="text"><button onClick="(function(){
-        window.open('./game.html#join=abcd','_self')
+    Host Game <button href="yay"  onClick="(function(){
+        window.open('./game.html?host=true','_self')
+        return false;
+    })();return false;">Create Room</button><br>
+    Join Game <input id="codeinpt" type="text"><button onClick="(function(){
+        window.open(`./game.html?join=${getCode()}`,'_self')
         return false;
     })();return false;">Join</button>
+    <script>function getCode(){return document.getElementById("codeinpt").value}</script>
 </body>
 </html>

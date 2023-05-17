@@ -147,6 +147,8 @@ class Connection2W {
     this.selfId;
     this.fullyConnected = false;
 
+    this.lastPing = 0
+
     this.e = {
       connection:this,
       onConnection:()=>{},
@@ -241,6 +243,7 @@ class Connection2W {
   
   processData(d) {
     d = JSON.parse(d)
+    
     if (d.connectToNow) {
       this.connect(d.connectToNow, true)
     } if (d.terminate) {
@@ -263,5 +266,31 @@ class Connection2W {
     }
   }
 
+
+}
+
+
+function parsePlayerData(player) {
+  return {
+    position:player.body.position,
+    id:player.body.id,
+    direction:player.direction,
+    keys:player.keys,
+    frame:player.frame,
+    color:player.color,
+    scale:player.scale,
+  }
+}
+
+function setPlayerWithData(player,data,updatePhysics=true) {
+  //console.log(data)
+  if(updatePhysics) {
+    Matter.Body.setPosition(player.body, data.position)
+    player.direction = data.direction
+  }
+  player.updateKeys(data.keys)
+  player.color = data.color
+  player.frame = data.frame
+  player.setScale(data.scale)
 
 }

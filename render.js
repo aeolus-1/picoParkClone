@@ -40,6 +40,7 @@ class Renderer {
         var playerPos = player.body.position
         this.ctx.translate(playerPos.x,playerPos.y)
         this.ctx.scale(player.direction,1)
+        this.ctx.scale(player.scale,player.scale)
         this.ctx.translate(-playerPos.x,-playerPos.y)
         drawSprite(this, player)
     
@@ -71,7 +72,18 @@ class Renderer {
                 }
             }
         }
+/*
+        var bodies = Matter.Composite.allBodies(this.game.matter.engine.world)
+        for (let i = 0; i < bodies.length; i++) {
+            const bod = bodies[i];
+            var bounds = bod.bounds,
+                size = v(-(bounds.min.x-bounds.max.x),-(bounds.min.y-bounds.max.y))
+            this.ctx.fillStyle = color
+
+            this.ctx.fillRect(bounds.min.x,bounds.min.y,size.x,size.y)
+        }*/
     }
+    
     
 }
 

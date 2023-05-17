@@ -6,6 +6,8 @@ class Client {
 
         this.roomConn;
         this.mainConn;
+
+        this.username = prompt("username?")
     }
     init(roomId) {
         this.roomConn = new Connection2W()
@@ -24,18 +26,25 @@ class Client {
             this.mainConn.e.onData = (d)=>{
                 this.processData(d)
             }
-        } else {
-            this.updateHostPlayers(d)
+            this.mainConn.e.onConnection = ()=>{
+                this.mainConn.send(JSON.stringify({
+                    setUsername:this.username
+                }))
+            }
+        }
+        if (d.playerData) {
+            this.updateHostPlayers(d.playerData)
+        }
+        if (d.setColor) {
+            this.mainPlayer.color = d.setColor
+        }
+        if (d.startGame) {
+            startGame()
         }
     }
     updateHost() {
         if (this.mainConn !=undefined&&this.mainConn.fullyConnected) this.mainConn.send(JSON.stringify({
-            player:{
-                position:this.mainPlayer.body.position,
-                direction:this.mainPlayer.direction,
-                id:this.mainPlayer.body.id,
-                keys:this.mainPlayer.keys,
-            }
+            player:parsePlayerData(this.mainPlayer)
         }))
     }
     updateHostPlayers(players) {
@@ -58,19 +67,18 @@ class Client {
                             id:player.id,
                         },
                     })
+                    foundPlayer.onlinePlayer = true
                 } else {
 
                 }
 
-                if (foundPlayer.body.id!=this.mainPlayer.body.id) {
+                if (foundPlayer.body.id!=this.mainPlayer.body.id||true) {
                     this.setPlayer(foundPlayer, player)
                 }
             
         }
     }
     setPlayer(body, data) {
-        Matter.Body.setPosition(body.body, data.position)
-        body.direction = data.direction
-        body.updateKeys(data.keys)
+        setPlayerWithData(body, data)
     }
 }

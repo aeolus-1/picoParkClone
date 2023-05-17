@@ -12,3 +12,11 @@ function hideGame() {
     document.getElementById("c").style.display = "none"
 
 }
+
+function setRoomCode(c) {
+    document.getElementById("roomCode").textContent = c
+}
+
+function addPlayerToMenu(name) {
+    document.getElementById("memberlist").appendChild(createElementFromHTML(`<div>${name}<br></div>`))
+}

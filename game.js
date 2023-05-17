@@ -18,6 +18,8 @@ class Game {
             self.playerhandler.updatePlayers()
             self.constraintHandler.updateConstraints()
         }
+
+        this.currentColor = 0
     }
 
     
@@ -29,6 +31,12 @@ class Game {
         this.matter.init()
         Matter.Events.on(this.matter.engine, "beforeUpdate", ()=>{this.updateMobiles(this)})
 
+    }
+
+    fetchColor() {
+        var colors = Object.keys(colorMods)
+        this.currentColor+=1
+        return colors[this.currentColor%colors.length]
     }
 
     testInit() {
