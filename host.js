@@ -12,7 +12,7 @@ class Host {
         setInterval(function(){
             if (window.hostConnection) {
                 if (!(window.hostConnection.roomJoinOnline || window.hostConnection.opening)) {
-                //window.hostConnection.recycleJoinConn()
+                window.hostConnection.recycleJoinConn()
             }}
         })
     }
@@ -48,6 +48,7 @@ class Host {
         }
         this.joinConn.e.onDisconnection = ()=>{
             this.roomJoinOnline = false
+            this.recycleJoinConn()
         }
 
 
@@ -61,7 +62,7 @@ class Host {
             d = JSON.parse(d)
 
             if (d.player) {
-                this.updateClientBody(d.player)
+                this.updateClientBody(d.player, connection)
             }
             if (d.setUsername) {
                 connection.clientUsername = d.setUsername
@@ -69,9 +70,7 @@ class Host {
             }
         }
         connection.e.onConnection = (d)=>{
-            connection.send(JSON.stringify({
-                setColor:this.game.fetchColor(),
-            }))
+           
             //addPlayerToMenu("yay")
         }
         /*
@@ -87,7 +86,7 @@ class Host {
         return connection
     }
 
-    updateClientBody(data) {
+    updateClientBody(data, conn) {
         var findPlayerById = (id) => {
             for (let i = 0; i < this.game.players.length; i++) {
                 const player = this.game.players[i];
@@ -104,13 +103,16 @@ class Host {
                 bodyOptions:{
                     id:player.id,
                 },
+                color:this.game.fetchColor(),
             })
             foundPlayer.onlinePlayer = true
         } else {
 
         }
+        conn.clientBody = foundPlayer
 
-        setPlayerWithData(foundPlayer, data, false)
+
+        foundPlayer.keys = data.keys
     
     }
     

@@ -10,7 +10,8 @@ class imgSprite {
     }
 }
 
-var mainAtlas = createImgEle("atlas.png")
+var mainAtlas = createImgEle("atlas.png"),
+    levelAtlas = createImgEle("levelAssets.png")
 
 var imagePosY = 0
 function drawSprite(render, player) {

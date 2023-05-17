@@ -34,7 +34,7 @@ class MatterHandler {
         //frictionStatic:1,
         //frictionAir:1
         //slop:1,
-        //restitution:0.2,
+        //restitution:1.1,
         collisionFilter:{
             //group:1
         },

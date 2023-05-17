@@ -11,7 +11,7 @@ class LevelHandler {
         var levelData = JSON.parse(atob(dat)),
     
             cellsize = v(50,50),
-            wallThickness = 20
+            wallThickness = 30
     
             this.currentLevel.data = levelData
             this.currentLevel.cellsize = cellsize

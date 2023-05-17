@@ -84,7 +84,7 @@ class Connection {
     });
     this.peer.on("disconnected", function () {
       console.error("peer disconnected")
-      this.connection.e.onDisconnection()
+      this.connection.e.onDisconnection("disconnected")
       this.connection.online = false;
       // Workaround for peer.reconnect deleting previous id
       this.id = this.connection.lastPeerId;
@@ -160,9 +160,9 @@ class Connection2W {
 
   }
   connectionEvents(conn) {
-    conn.e.onDisconnection = ()=>{
+    conn.e.onDisconnection = (e)=>{
       this.fullyConnected = false
-      this.e.onDisconnection()
+      this.e.onDisconnection(e)
     }
   }
   open(id=null, twC=false) {
@@ -237,13 +237,17 @@ class Connection2W {
       
     }, 500);
 
-    this.e.onDisconnection()
+    this.e.onDisconnection("terminated")
     
   }
   
   processData(d) {
     d = JSON.parse(d)
-    
+    if (d.ping) {
+    let ping = (new Date()).getTime()-d.ping,
+      averageStrength = 10
+    this.lastPing = ((this.lastPing*averageStrength)+ping)/(averageStrength+1)
+    }
     if (d.connectToNow) {
       this.connect(d.connectToNow, true)
     } if (d.terminate) {
@@ -260,6 +264,7 @@ class Connection2W {
     if (this.fullyConnected) {
       this.connT2S.send(raw?d:JSON.stringify({
         content:d,
+        ping:(new Date()).getTime(),
       }))
     } else {
       console.error("2 way not fully connected")

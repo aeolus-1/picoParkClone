@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pico</title>
     <script src="common.js"></script>
     <script src="matter.min.js"></script>
     <script src="ressurect.js"></script>
     <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+
+    <link rel="icon" href="./favicon.png">
+    <title>pico recreational area</title>
 
     <style>
         body {
@@ -91,11 +93,13 @@
             window.hostConnection;window.clientConnection
             if (urlData.host) {hostConnection = new Host(mainGame);hostConnection.init()}
             if (urlData.join) {clientConnection = new Client(mainGame,player1);clientConnection.init(urlData.join)}
-            
+            if (!urlData.host&&!urlData.join) startGame()
+
 
             setInterval(() => {
                 if (window.hostConnection) hostConnection.updateClients()
                 if (window.clientConnection) clientConnection.updateHost()
+
             }, 10);
 
             setInterval(() => {

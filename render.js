@@ -6,6 +6,10 @@ class Renderer {
         this.ctx = this.canvas.getContext("2d")
 
         this.resizeCanvas()
+        this.lastFPS = (new Date()).getTime()
+        this.fps = 0
+
+        this.debug = false
         window.onresize = ()=>{this.resizeCanvas()}
     }
     resizeCanvas() {
@@ -21,7 +25,15 @@ class Renderer {
     }
 
     renderLoop(self) {
+        let averageStrength = 50,
+            currentFps = (new Date()).getTime()-self.lastFPS
+        if(currentFps<100) self.fps = ((self.fps*averageStrength)+currentFps)/(averageStrength+1)
+        
         self.clearCanvas()
+        self.renderBackground()
+        self.ctx.save()
+        //this.ctx.translate(-this.game.players[0].body.position.x+(window.innerWidth*0.5),-this.game.players[0].body.position.y+(window.innerHeight*0.5))
+
         self.renderLevel(self.game.levelHandler)
         self.renderConstraints()
 
@@ -30,8 +42,11 @@ class Renderer {
             self.renderPlayer(player)
         }
 
+        self.ctx.restore()
 
+        if (self.debug) self.renderDebug()
 
+        self.lastFPS = (new Date()).getTime()
         requestAnimationFrame(()=>{self.renderLoop(self)})
     }
 
@@ -57,7 +72,18 @@ class Renderer {
             
         }
     }
+    renderBackground() {
+        var grad = this.ctx.createLinearGradient(window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight)
+        grad.addColorStop(1,"#ff0")
+        grad.addColorStop(0,"#fb2")
+        this.ctx.fillStyle = grad
+        this.ctx.fillRect(0,0,window.innerWidth,window.innerHeight)
+    }
     renderLevel(levelHandler) {
+        
+
+        
+
         var color = "rgb(255,134,77)",
             levelData = levelHandler.currentLevel.data,
                 cellsize = levelHandler.currentLevel.cellsize
@@ -68,20 +94,112 @@ class Renderer {
                 for (let y = 0; y < row.length; y++) {
                     const cell = row[y];
                     this.ctx.fillStyle = color
-                    if (cell) this.ctx.fillRect((y-0.5)*cellsize.x,(x-0.5)*cellsize.y,cellsize.x,cellsize.y)
+                    if (cell) {
+                        if (!levelData[Math.max(x-1,0)][y]) {
+                            this.ctx.drawImage(
+                                levelAtlas,
+                                126,194,
+                                161,161,
+                                (y-0.5)*cellsize.x,(x-0.5)*cellsize.y,cellsize.x,cellsize.y
+                            )
+                        } else{
+                            this.ctx.drawImage(
+                                levelAtlas,
+                                389,191,
+                                161,161,
+                                (y-0.5)*cellsize.x,(x-0.5)*cellsize.y,cellsize.x,cellsize.y
+                            )
+                        }
+                    }
                 }
             }
         }
-/*
+
         var bodies = Matter.Composite.allBodies(this.game.matter.engine.world)
         for (let i = 0; i < bodies.length; i++) {
             const bod = bodies[i];
             var bounds = bod.bounds,
                 size = v(-(bounds.min.x-bounds.max.x),-(bounds.min.y-bounds.max.y))
-            this.ctx.fillStyle = color
+            this.ctx.fillStyle = "#f0f"
 
-            this.ctx.fillRect(bounds.min.x,bounds.min.y,size.x,size.y)
-        }*/
+            //this.ctx.fillRect(bounds.min.x,bounds.min.y,size.x,size.y)
+        }
+    }
+    renderDebug() {
+        var strings = [
+            "v69.420",
+            "pico park clone | aeolus-1 on github",
+                (new Date()),
+                "break",
+            ...((window.clientConnection)?([
+                "--client connection--",
+
+            `server connection: ${window.navigator.onLine}`,
+            `fully connected: ${clientConnection.mainConn.fullyConnected}`,
+            `ping: ${Math.floor(clientConnection.mainConn.lastPing*10)/10}ms`,
+            ]):(window.hostConnection)?([
+                "--host connection--",
+                `connections: ${hostConnection.connections.length}`,
+                ...(
+                    function(){
+                        var connections = hostConnection.connections,
+                            mapConn = new Array(connections.length),
+                                returnArray = []
+
+                        for (let i = 0; i < mapConn.length; i++) {
+                            const mA = mapConn[i];
+                            returnArray = [...returnArray,
+                                "step",
+                                `username: ${connections[i].clientUsername}`,
+                                `color: ${connections[i].clientBody.color}`,
+                                `id: ${connections[i].clientBody.body.id}`,
+                                `ping: ${Math.floor(connections[i].lastPing*10)/10}ms`,
+                                `S2T connected: ${connections[i].connS2T.peer._open}; T2S connected: ${connections[i].connT2S.peer._open}`
+                            ]
+                                
+                            
+                        }
+
+                        return [...returnArray,]
+                    }
+                )(),
+            ]):([
+                "not multiplayer game",
+                "warm sandy beaches and ",
+                "cocktails with the little straw hats",
+            ])
+            ),
+            "break",
+            "--matter--",
+            `FPS: ${Math.floor(10000/mainGame.renderer.fps)/10}`,
+            `bodies: ${Matter.Composite.allBodies(mainGame.matter.engine.world).length}`,
+            "break",
+            
+        ],
+            fontsize = 15,
+            step = 0
+
+        for (let i = 0; i < strings.length; i++) {
+            const str = strings[i];
+            step += fontsize
+            if (str=="break") {
+                step += fontsize*1
+            } else if(str=="step"){
+                step += fontsize*0.1
+            } else this.drawDebugText(v(0,step),str, fontsize)
+        }
+        
+    }
+    drawDebugText(pos, string, fontsize) {
+        this.ctx.fillStyle = "#000a"
+        this.ctx.font = `${fontsize}px Times New Roman`
+        var measure = this.ctx.measureText(string)
+        
+
+        this.ctx.fillRect(pos.x,pos.y+2,measure.width,(-fontsize))
+        this.ctx.fillStyle = "#fff"
+
+        this.ctx.fillText(string, pos.x, pos.y)
     }
     
     
@@ -95,3 +213,4 @@ function renderCheckLoop() {
 
     }
 }
+
