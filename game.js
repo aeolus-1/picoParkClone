@@ -8,7 +8,10 @@ class Game {
         this.players = []
         this.constraints = []
         this.buttons = []
+        this.doors = []
         this.triggers = []
+
+        this.entities = []
 
         this.matter = new MatterHandler(this)
         this.triggerHandler = new TriggerHandler(this)
@@ -16,17 +19,29 @@ class Game {
         this.levelHandler = new LevelHandler(this)
         this.renderer = new Renderer(this)
         this.constraintHandler = new ConstraintHandler(this)
+
+        this.entityHandler = new EntityHandler(this)
+
         
 
         this.updateMobiles = function(self){
+            self.updateDelta()
             self.playerhandler.updatePlayers()
             self.constraintHandler.updateConstraints()
             self.triggerHandler.updateTriggers()
+            self.updateEntities()
+
         }
 
         this.currentColor = 0
+        this.lastDelta = 0
+        this.deltaTime = 0
     }
+    updateDelta() {
+        this.deltaTime = Math.min(((new Date()).getTime()-this.lastDelta)/(1000/60), 10)
+        this.lastDelta = (new Date()).getTime()
 
+    }
     
 
     initRender() {
@@ -42,6 +57,13 @@ class Game {
         var colors = Object.keys(colorMods)
         this.currentColor+=1
         return colors[this.currentColor%colors.length]
+    }
+    updateEntities() {
+        for (let i = 0; i < this.entities.length; i++) {
+            const ent = this.entities[i];
+            ent.update()
+            if (ent.unload) this.entities.splice(i, 1)
+        }
     }
 
     testInit() {

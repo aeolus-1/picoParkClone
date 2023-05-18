@@ -39,11 +39,16 @@ class Renderer {
         self.renderLevel(self.game.levelHandler)
         self.renderConstraints()
 
+        
+
         for (let i = 0; i < self.game.players.length; i++) {
             const player = self.game.players[i];
             self.renderPlayer(player)
         }
 
+        self.renderEntities()
+        
+        if (self.debug) self.renderTriggers()
         self.ctx.restore()
 
         if (self.debug) self.renderDebug()
@@ -68,6 +73,18 @@ class Renderer {
             if (player.conn) {
                 this.ctx.fillText(player.conn.clientUsername, playerPos.x,playerPos.y-(spriteSize.y*0.5)-10)
             }
+            this.ctx.save()
+            this.ctx.beginPath()
+            let centerPos = v(player.body.position.x,player.body.position.y+(spriteSize.y*0.5))
+            this.ctx.translate(centerPos.x,centerPos.y)
+            this.ctx.scale(1.45,0.5)
+            this.ctx.translate(-centerPos.x,-centerPos.y)
+            this.ctx.arc(centerPos.x,centerPos.y,spriteSize.x*0.25,0,Math.PI*2)
+
+            this.ctx.stroke()
+            if(player.onGround()) this.ctx.fill()
+            this.ctx.closePath()
+            this.ctx.restore()
         }
 
     }
@@ -107,11 +124,36 @@ class Renderer {
                     161,161,
                     (but.pos.x-0.5)*cellsize.x,(but.pos.y-0.5)*cellsize.y,cellsize.x,cellsize.y)
                 }
-            if (this.debug) {
-                this.ctx.strokeStyle = "#f00"
-                this.ctx.lineWidth = 2
-                this.ctx.strokeRect((but.pos.x-0.5)*cellsize.x,(but.pos.y-0.5)*cellsize.y,cellsize.x,cellsize.y)
-            }
+            
+        }
+    }
+    renderDoors() {
+        var cellsize = this.game.levelHandler.currentLevel.cellsize
+
+        for (let i = 0; i < this.game.doors.length; i++) {
+            const but = this.game.doors[i];
+            //console.log(but.trigger)
+            if (but.open) {
+                this.ctx.drawImage(levelAtlas, 
+                    591,885,
+                    161*2.5,161*2.5,
+                    (but.pos.x-1.5)*cellsize.x,(but.pos.y-2.5)*cellsize.y,cellsize.x*2,cellsize.y*2)
+            } else {
+                this.ctx.drawImage(levelAtlas, 
+                    111,885,
+                    161*2.5,161*2.5,
+                    (but.pos.x-1.5)*cellsize.x,(but.pos.y-2.5)*cellsize.y,cellsize.x*2,cellsize.y*2)
+                }
+            
+        }
+    }
+    renderTriggers() {
+        for (let i = 0; i < this.game.triggers.length; i++) {
+            const trig = this.game.triggers[i];
+            this.ctx.strokeStyle = "#f00"
+            var bounds = trig.rect.bounds,
+                    size = v(-(bounds.min.x-bounds.max.x),-(bounds.min.y-bounds.max.y))
+            this.ctx.strokeRect(bounds.min.x,bounds.min.y, size.x,size.y)
         }
     }
     renderLevel(levelHandler) {
@@ -149,7 +191,7 @@ class Renderer {
                 }
             }
         }
-
+        this.renderDoors()
         this.renderButtons()
 
         if(this.debug) {
@@ -166,6 +208,33 @@ class Renderer {
         }
 
 
+    }
+    renderEntities() {
+        for (let i = 0; i < this.game.entities.length; i++) {
+            const ent = this.game.entities[i];
+            ent.render(this.ctx)
+            if (ent.constructor.name=="Key"&&this.debug) {
+                if (!ent.targetedDoor) {
+                    this.ctx.beginPath()
+                    this.ctx.arc(ent.pos.x,ent.pos.y,45,0,Math.PI*2)
+                    this.ctx.strokeStyle = "#f00"
+                    this.ctx.stroke()
+                    this.ctx.closePath()
+
+                    if (ent.followingPlayer) {
+                        this.ctx.beginPath()
+
+                        this.ctx.moveTo(ent.pos.x,ent.pos.y)
+                        this.ctx.lineTo(ent.followingPlayer.body.position.x,ent.followingPlayer.body.position.y)
+                        this.ctx.strokeStyle = "#00f"
+                        this.ctx.stroke()
+                        this.ctx.closePath()
+
+                    }
+                }
+                
+            }
+        }
     }
     renderDebug() {
         var strings = [

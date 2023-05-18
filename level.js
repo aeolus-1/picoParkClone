@@ -18,12 +18,12 @@ class LevelHandler {
             this.currentLevel.cellsize = cellsize
             this.game.buttons = levelData.buttons
 
-        var width = levelMap.length*cellsize.x,
-            height = levelMap[0].length*cellsize.y
+        var width = levelMap[0].length*cellsize.x,
+            height = levelMap.length*cellsize.y
     
         this.game.renderer.offset = v(
-            (-width*0.25)+(window.innerWidth*0.25),
-            (-height*0.25)+(window.innerHeight*0.5),
+            (cellsize.x*0.5)+(-width*0.5)+(window.innerWidth*0.5),
+            (cellsize.y*0.5)+(-height*0.5)+(window.innerHeight*0.5),
         )
         for (let x = 0; x < levelMap.length; x++) {
             const row = levelMap[x];
@@ -67,6 +67,18 @@ class LevelHandler {
             console.log(but)
             but.trigger.onEnter = but.onPress
             but.trigger.onIn = but.onIn
+        }
+        for (let i = 0; i < levelData.doors.length; i++) {
+            const dor = levelData.doors[i];
+            dor.trigger = this.game.triggerHandler.addTrigger(v((dor.pos.x-0.5)*cellsize.x,(dor.pos.y-1.5)*cellsize.y),v(cellsize.x*2,cellsize.y*2))
+            this.game.doors.push(dor)
+            dor.trigger.onIn = dor.onIn
+
+        }
+        for (let i = 0; i < levelData.keys.length; i++) {
+            const key = levelData.keys[i];
+            var newKey = new Key(this.game, v(key.x*cellsize.x,key.y*cellsize.y), {})
+            this.game.entities.push(newKey)
         }
     
     }

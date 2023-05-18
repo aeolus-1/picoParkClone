@@ -92,6 +92,8 @@ class Player {
         this.body.player = this
         this.onlinePlayer = false
 
+        this.ready = false
+
         this.frame = "idle"
         this.preFalling = false
         this.groundDetector = Matter.Bodies.circle(this.body.position.x,this.body.position.y+(spriteSize.x*0.5), spriteSize.x*0.25,{
@@ -108,18 +110,26 @@ class Player {
         Matter.Body.scale(this.groundDetector, 1.45,0.5)
         
     }
+    readyUp() {
+        this.ready = true
+        Matter.Body.setPosition(this.body, v(-1000,-10000))
+    }
+    restart() {
+        this.ready = false
+        Matter.Body.setPosition(this.body, v(
+            100,
+            -this.game.renderer.offset.y-20,
+            ))
+    }
     updateKeys(keys) {
         this.keys = {...keys}
     }
     testFalling() {
         if (this.body.position.y>=window.innerHeight) Matter.Body.setPosition(this.body, v(
             100,
-            this.body.position.y,
+            -this.game.renderer.offset.y-20,
             ))
-        Matter.Body.setPosition(this.body, v(
-            this.body.position.x,
-            this.body.position.y%window.innerHeight,
-            ))
+       
             
 
         var falling = !this.onGround()
@@ -138,7 +148,7 @@ class Player {
     }
 
     moveHor(dir, multi=false) {
-        let speed = 2.75,
+        let speed = 2.75*this.game.deltaTime,
             diff = 1
         Matter.Body.setPosition(this.body, v(this.body.position.x+(dir*speed),this.body.position.y))
         if (this.testPlayerCollision()) {

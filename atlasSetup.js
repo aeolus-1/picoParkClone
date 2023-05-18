@@ -36,6 +36,7 @@ var spriteSize = v(40,46)
 var sprites = {
     "idle":{
         count:8,
+        speed:120,
         frames:[
             
             {
@@ -79,6 +80,7 @@ var sprites = {
     },
     "falling":{
         count:2,
+        speed:80,
         frames:[
             {
                 pos:v(613,120),
@@ -94,6 +96,7 @@ var sprites = {
     },
     "leaping":{
         count:1,
+        speed:1000,
         frames:[
             {
                 pos:v(557,55),
@@ -103,6 +106,7 @@ var sprites = {
     },
     "walking":{
         count:9,
+        speed:80,
         frames:[
             {
                 pos:v(34,119),
@@ -161,7 +165,7 @@ function getSpritePosition(id, color, player) {
     var frameData = sprites[id],
         frameCount = frameData.count,
         offset = 0,
-        choosenFrame = Math.floor(((((new Date()).getTime())/120)+offset)%frameCount)
+        choosenFrame = Math.floor(((((new Date()).getTime())/frameData.speed)+offset)%frameCount)
         positions = frameData.frames[choosenFrame]
     return {
         pos:v(
