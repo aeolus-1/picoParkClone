@@ -74,12 +74,12 @@ class Game {
         
         
         
-
+/*
         this.playerhandler.addPlayer({
             controls:["a","d","w","s"],
             color:"green",
         }) 
-        /*
+        
         this.playerhandler.addPlayer({
             controls:["a","d","w","s"],
             color:"orange",
@@ -105,7 +105,7 @@ class Game {
 
         this.levelHandler.loadLevel(levels.one)
 
-        //this.bindPlayers(this.players)
+        
     }
 
     bindPlayers(players) {

@@ -33,6 +33,10 @@ class LevelHandler {
 
         var width = levelMap[0].length*cellsize.x,
             height = levelMap.length*cellsize.y
+
+        if (levelData.playersBinded) {
+            this.game.bindPlayers(this.game.players)
+        }
     
         this.game.renderer.offset = v(
             (cellsize.x*0.5)+(-width*0.5)+(window.innerWidth*0.5),

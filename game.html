@@ -71,8 +71,19 @@
             <div id="memberList" style="border: solid black 1px; width:200px">
                 <h2>Members:</h2>
                 <div id="memberlist"></div>
+                <div>Host<br></div>
 
             </div>
+            <button onClick="(function(){
+                mainGame.playerhandler.addPlayer({
+                    controls:['a','d','w','s'],
+                    keys:keys,
+                    color:mainGame.fetchColor(),
+                })
+                addPlayerToMenu('Player2')
+                return false;
+            })();return false;">Add local co-op Player</button>
+<hr>
             <button onClick="(function(){
                 startGame()
                 hostConnection.broadcast(JSON.stringify({
@@ -81,12 +92,14 @@
                 return false;
             })();return false;">Start Game</button>
             </div>
+
         <div id="join" style="display: none;">
             Waiting for host to start (maybe idk really)
         </div>
     </div>
 
     <script>
+        
         function initGame() {
             window.mainGame = new Game()
 

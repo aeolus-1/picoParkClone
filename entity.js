@@ -32,6 +32,7 @@ class Entity {
 class Key extends Entity {
     constructor(game, pos, options) {
         super(game, pos,options)
+        this.ogPos = {...pos}
         this.vel = v()
         this.followingPlayer = undefined
         this.positionUnlocked = false
@@ -61,7 +62,13 @@ class Key extends Entity {
 
             } else {
 
-                if (this.positionUnlocked) this.vel.y += (360-this.pos.y)*0.002
+                
+                var rawDst = getDst(this.ogPos, this.pos),
+                    dst = Math.min(Math.pow(rawDst,1.2)*0.02, 0.4),
+                    angle = -getAngle(this.ogPos, this.pos)+(Math.PI*0.5)
+
+                    this.vel.x += Math.cos(angle)*dst
+                    this.vel.y += Math.sin(angle)*dst
 
                 this.game.players.forEach((e)=>{
                     if (getDst(e.body.position, this.pos)<45) {
