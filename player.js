@@ -1,6 +1,8 @@
 class PlayerHandler {
     constructor(game) {
         this.game = game
+        this.playerComp = Matter.Composite.create()
+        Matter.Composite.add(this.game.matter.engine.world, this.playerComp)
 
     }
     addPlayer(options) {
@@ -80,12 +82,13 @@ class Player {
 
         this.direction = 1
         this.scale = 1
+        console.log(this.game)
 
         this.body = this.game.matter.addBody(v(200,-(Math.random()*200)),v(40,46),{
             ...options.bodyOptions,
             inertia:Infinity,
             
-            isStatic:false,render:{visible:debug}})
+            isStatic:false,render:{visible:debug}}, this.game.playerhandler.playerComp)
         this.body.player = this
         this.onlinePlayer = false
 
@@ -109,6 +112,10 @@ class Player {
         this.keys = {...keys}
     }
     testFalling() {
+        if (this.body.position.y>=window.innerHeight) Matter.Body.setPosition(this.body, v(
+            100,
+            this.body.position.y,
+            ))
         Matter.Body.setPosition(this.body, v(
             this.body.position.x,
             this.body.position.y%window.innerHeight,

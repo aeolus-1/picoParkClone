@@ -24,6 +24,7 @@ function drawSprite(render, player) {
         pos.x-(spos.size.x/2),
         pos.y-(spos.size.y/2),
     ),spos.pos, spos.size)
+    return spos.choosenFrame
 }
 function drawImageTemp(ctx,pos,spos,size) {
     ctx.drawImage(mainAtlas,spos.x,spos.y,size.x,size.y,pos.x,pos.y, size.x,size.y)
@@ -167,7 +168,8 @@ function getSpritePosition(id, color, player) {
             positions.pos.x+colorMods[color].x,
             positions.pos.y+colorMods[color].y,
         ),
-        size:positions.size
+        size:positions.size,
+        choosenFrame:choosenFrame,
     }
 }
 

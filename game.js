@@ -7,16 +7,21 @@ class Game {
         this.mobile = []
         this.players = []
         this.constraints = []
+        this.buttons = []
+        this.triggers = []
 
         this.matter = new MatterHandler(this)
+        this.triggerHandler = new TriggerHandler(this)
         this.playerhandler = new PlayerHandler(this)
         this.levelHandler = new LevelHandler(this)
         this.renderer = new Renderer(this)
         this.constraintHandler = new ConstraintHandler(this)
+        
 
         this.updateMobiles = function(self){
             self.playerhandler.updatePlayers()
             self.constraintHandler.updateConstraints()
+            self.triggerHandler.updateTriggers()
         }
 
         this.currentColor = 0

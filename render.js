@@ -57,9 +57,17 @@ class Renderer {
         this.ctx.scale(player.direction,1)
         this.ctx.scale(player.scale,player.scale)
         this.ctx.translate(-playerPos.x,-playerPos.y)
-        drawSprite(this, player)
+        let frame = drawSprite(this, player)
     
         this.ctx.restore()
+        this.ctx.fillStyle = "#f0f"
+        if (this.debug) {
+            this.ctx.fillText(frame, playerPos.x+(spriteSize.x*0.5)+5,playerPos.y-(spriteSize.y*0.5))
+            if (player.conn) {
+                this.ctx.fillText(player.conn.clientUsername, playerPos.x,playerPos.y-(spriteSize.y*0.5)-10)
+            }
+        }
+
     }
     renderConstraints() {
         for (let i = 0; i < this.game.constraints.length; i++) {
@@ -78,6 +86,30 @@ class Renderer {
         grad.addColorStop(0,"#fb2")
         this.ctx.fillStyle = grad
         this.ctx.fillRect(0,0,window.innerWidth,window.innerHeight)
+    }
+    renderButtons() {
+        var cellsize = this.game.levelHandler.currentLevel.cellsize
+
+        for (let i = 0; i < this.game.buttons.length; i++) {
+            const but = this.game.buttons[i];
+            //console.log(but.trigger)
+            if (but.trigger.playerInside) {
+                this.ctx.drawImage(levelAtlas, 
+                    600,535,
+                    161,161,
+                    (but.pos.x-0.5)*cellsize.x,(but.pos.y-0.5)*cellsize.y,cellsize.x,cellsize.y)
+            } else {
+                this.ctx.drawImage(levelAtlas, 
+                    389,535,
+                    161,161,
+                    (but.pos.x-0.5)*cellsize.x,(but.pos.y-0.5)*cellsize.y,cellsize.x,cellsize.y)
+                }
+            if (this.debug) {
+                this.ctx.strokeStyle = "#f00"
+                this.ctx.lineWidth = 2
+                this.ctx.strokeRect((but.pos.x-0.5)*cellsize.x,(but.pos.y-0.5)*cellsize.y,cellsize.x,cellsize.y)
+            }
+        }
     }
     renderLevel(levelHandler) {
         
@@ -115,15 +147,22 @@ class Renderer {
             }
         }
 
-        var bodies = Matter.Composite.allBodies(this.game.matter.engine.world)
-        for (let i = 0; i < bodies.length; i++) {
-            const bod = bodies[i];
-            var bounds = bod.bounds,
-                size = v(-(bounds.min.x-bounds.max.x),-(bounds.min.y-bounds.max.y))
-            this.ctx.fillStyle = "#f0f"
+        this.renderButtons()
 
-            //this.ctx.fillRect(bounds.min.x,bounds.min.y,size.x,size.y)
+        if(this.debug) {
+            var bodies = Matter.Composite.allBodies(this.game.matter.engine.world)
+            for (let i = 0; i < bodies.length; i++) {
+                const bod = bodies[i];
+                var bounds = bod.bounds,
+                    size = v(-(bounds.min.x-bounds.max.x),-(bounds.min.y-bounds.max.y))
+                this.ctx.strokeStyle = "#f0f"
+                this.ctx.lineWidth = 2
+
+                this.ctx.strokeRect(bounds.min.x,bounds.min.y,size.x,size.y)
+            }
         }
+
+
     }
     renderDebug() {
         var strings = [
@@ -165,6 +204,7 @@ class Renderer {
                 )(),
             ]):([
                 "not multiplayer game",
+                "step",
                 "warm sandy beaches and ",
                 "cocktails with the little straw hats",
             ])
@@ -181,12 +221,13 @@ class Renderer {
 
         for (let i = 0; i < strings.length; i++) {
             const str = strings[i];
-            step += fontsize
             if (str=="break") {
                 step += fontsize*1
             } else if(str=="step"){
-                step += fontsize*0.1
-            } else this.drawDebugText(v(0,step),str, fontsize)
+                step += fontsize*0.3
+            } else {
+                step += fontsize
+                ;this.drawDebugText(v(0,step),str, fontsize)}
         }
         
     }

@@ -8,22 +8,23 @@ class LevelHandler {
 
     }
     loadLevel(dat) {
-        var levelData = JSON.parse(atob(dat)),
+        var levelData = dat,
     
             cellsize = v(50,50),
             wallThickness = 30
     
-            this.currentLevel.data = levelData
+            let levelMap = levelData.map
+            this.currentLevel.data = levelMap
             this.currentLevel.cellsize = cellsize
+            this.game.buttons = levelData.buttons
     
-    
-        for (let x = 0; x < levelData.length; x++) {
-            const row = levelData[x];
+        for (let x = 0; x < levelMap.length; x++) {
+            const row = levelMap[x];
             for (let y = 0; y < row.length; y++) {
                 const cell = row[y];
                 //console.log(cell)
-                var wallone = levelData[Math.min(x+1,levelData.length-1)][y],
-                    walltwo = levelData[x][y+1]
+                var wallone = levelMap[Math.min(x+1,levelMap.length-1)][y],
+                    walltwo = levelMap[x][y+1]
     
                 let options = {
                     isStatic:true,
@@ -49,7 +50,16 @@ class LevelHandler {
                     let wall = Matter.Bodies.rectangle(((y+0.5)*cellsize.y)+(wallThickness*0.5*-dir),(x)*cellsize.x, wallThickness,cellsize.x+(wallThickness*0), options)
                     Matter.Composite.add(this.game.matter.engine.world, wall)
                 }
+                
             }
+        }
+        for (let i = 0; i < levelData.buttons.length; i++) {
+            const but = levelData.buttons[i];
+            let cellsize = this.game.levelHandler.currentLevel.cellsize
+            but.trigger = this.game.triggerHandler.addTrigger(v((but.pos.x-0)*cellsize.x,(but.pos.y-0)*cellsize.y),v(cellsize.x,cellsize.y))
+            console.log(but)
+            but.trigger.onEnter = but.onPress
+            but.trigger.onIn = but.onIn
         }
     
     }

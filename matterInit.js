@@ -17,6 +17,17 @@ class MatterHandler {
     this.engine.gravity.scale *= 2
 
     this.running = false
+
+    this.options = {
+      ghost:{
+        collisionFilter:{
+          catagory:2,
+          group:1,
+          mask:0,
+        },
+        isStatic:true,
+      }
+    }
     
     
 
@@ -27,7 +38,7 @@ class MatterHandler {
     this.running = true
   }
 
-  addBody(pos,size,options) {
+  addBody(pos,size,options,comp=this.engine.world) {
     var rect = Bodies.rectangle(pos.x,pos.y,size.x,size.y,{
         inertia:Infinity,
         //friction:1,
@@ -42,7 +53,7 @@ class MatterHandler {
     })
     console.log(rect)
 
-    Matter.Composite.add(this.engine.world, rect);
+    Matter.Composite.add(comp, rect);
 
     return rect
 

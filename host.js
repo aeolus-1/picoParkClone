@@ -111,7 +111,7 @@ class Host {
         }
         conn.clientBody = foundPlayer
 
-
+        foundPlayer.conn = conn
         foundPlayer.keys = data.keys
     
     }
