@@ -9,6 +9,8 @@ class Renderer {
         this.lastFPS = (new Date()).getTime()
         this.fps = 0
 
+        this.offset = v()
+
         this.debug = false
         window.onresize = ()=>{this.resizeCanvas()}
     }
@@ -32,7 +34,7 @@ class Renderer {
         self.clearCanvas()
         self.renderBackground()
         self.ctx.save()
-        //this.ctx.translate(-this.game.players[0].body.position.x+(window.innerWidth*0.5),-this.game.players[0].body.position.y+(window.innerHeight*0.5))
+        self.ctx.translate(self.offset.x,self.offset.y)
 
         self.renderLevel(self.game.levelHandler)
         self.renderConstraints()
@@ -82,8 +84,9 @@ class Renderer {
     }
     renderBackground() {
         var grad = this.ctx.createLinearGradient(window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight)
-        grad.addColorStop(1,"#ff0")
-        grad.addColorStop(0,"#fb2")
+        
+        grad.addColorStop(1,"rgb(255,226,24)")
+        grad.addColorStop(0,"rgb(255,176,23)")
         this.ctx.fillStyle = grad
         this.ctx.fillRect(0,0,window.innerWidth,window.innerHeight)
     }

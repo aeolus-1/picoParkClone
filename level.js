@@ -17,7 +17,14 @@ class LevelHandler {
             this.currentLevel.data = levelMap
             this.currentLevel.cellsize = cellsize
             this.game.buttons = levelData.buttons
+
+        var width = levelMap.length*cellsize.x,
+            height = levelMap[0].length*cellsize.y
     
+        this.game.renderer.offset = v(
+            (-width*0.25)+(window.innerWidth*0.25),
+            (-height*0.25)+(window.innerHeight*0.5),
+        )
         for (let x = 0; x < levelMap.length; x++) {
             const row = levelMap[x];
             for (let y = 0; y < row.length; y++) {

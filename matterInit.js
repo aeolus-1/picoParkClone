@@ -45,13 +45,12 @@ class MatterHandler {
         //frictionStatic:1,
         //frictionAir:1
         //slop:1,
-        //restitution:1.1,
+        //restitution:1.3,
         collisionFilter:{
             //group:1
         },
         ...options,
     })
-    console.log(rect)
 
     Matter.Composite.add(comp, rect);
 

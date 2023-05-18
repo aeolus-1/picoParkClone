@@ -137,7 +137,7 @@ class Player {
         return Matter.Query.collides(this.groundDetector, Matter.Composite.allBodies(this.game.matter.engine.world).filter((a)=>{return a.id!=this.body.id&&a.id!=this.groundDetector.id})).length>0
     }
 
-    moveHor(dir) {
+    moveHor(dir, multi=false) {
         let speed = 2.75,
             diff = 1
         Matter.Body.setPosition(this.body, v(this.body.position.x+(dir*speed),this.body.position.y))
@@ -150,12 +150,12 @@ class Player {
             var bodyIs = (playersOnTop[i].bodyA.label!="Rectangle Body")?"bodyA":"bodyB"
             var player = playersOnTop[i][bodyIs].player;
             //player.frame = "walking"
-            player.moveHor(dir)
+            player.moveHor(dir, true)
             //player.moveHor(dir*diff)
         }
         
         //Matter.Body.setVelocity(this.body, v((dir*speed)+this.body.velocity.x,this.body.velocity.y))
-        this.direction = Math.sign(dir)
+        if (!multi) this.direction = Math.sign(dir)
         this.updatePlayerParts()
     }
     findPlayerGroundDectors() {
