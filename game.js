@@ -70,19 +70,20 @@ class Game {
         this.initPhysics()
             //addBody(v(0,500),v(2000,50),{isStatic:true,render:levelRender})
         
-        /*
         
+        
+        
+        
+
+        this.playerhandler.addPlayer({
+            controls:["a","d","w","s"],
+            color:"green",
+        }) 
+        /*
         this.playerhandler.addPlayer({
             controls:["a","d","w","s"],
             color:"orange",
         }) 
-        
-
-        this.playerhandler.addPlayer({
-            controls:["j","l","i","k"],
-            color:"green",
-        }) 
-        
     
         this.playerhandler.addPlayer({
             

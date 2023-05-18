@@ -20,14 +20,13 @@ class ConstraintHandler {
             forceStrength*Math.cos(angle),
             forceStrength*Math.sin(angle),
         )
-            console.log(forceVector.y)
         
-        if (0) Matter.Body.setPosition(bodyA, v(
-            bodyA.position.x+forceVector.x,
-            bodyA.position.y+forceVector.y,
+        if (1) Matter.Body.setPosition(bodyA, v(
+            bodyA.position.x+(forceVector.x*10),
+            bodyA.position.y,
         ))
         if (1) Matter.Body.setVelocity(bodyA, v(
-            bodyA.velocity.x+(forceVector.x),
+            bodyA.velocity.x,
             bodyA.velocity.y+(forceVector.y),
         ))
 

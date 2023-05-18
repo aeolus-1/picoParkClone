@@ -11,13 +11,18 @@ class PlayerHandler {
         return newPlayer
     }
     updatePlayers() {
-        var players = this.game.players
+        var players = this.game.players,
+            readyPlayers = this.game.players.length
         for (let i = 0; i < players.length; i++) {
             const player = players[i];
             this.updatePlayerControls(player)
             this.updatePlayer(player)
+            if (player.ready) {
+                readyPlayers-=1
+            }
             
         }
+        
         updateControls()
 
     }
@@ -78,6 +83,8 @@ class Player {
         this.keys = {}
 
         let debug = 0
+
+        this.exitTimer = 60
         
 
         this.direction = 1
@@ -116,10 +123,15 @@ class Player {
     }
     restart() {
         this.ready = false
+        this.exitTimer = 60
         Matter.Body.setPosition(this.body, v(
             100,
             -this.game.renderer.offset.y-20,
             ))
+            Matter.Body.setVelocity(this.body, v(
+                0,0
+                ))
+            this.setScale(1)
     }
     updateKeys(keys) {
         this.keys = {...keys}
@@ -180,7 +192,7 @@ class Player {
     }
     testPlayerCollision() {
         Matter.Body.scale(this.body, 1,0.5)
-        var ret = Matter.Query.collides(this.body, Matter.Composite.allBodies(this.game.matter.engine.world).filter((a)=>{return a.id!=this.body.id&&a.isStatic}))
+        var ret = Matter.Query.collides(this.body, Matter.Composite.allBodies(this.game.matter.engine.world).filter((a)=>{return a.id!=this.body.id}))
         Matter.Body.scale(this.body, 1,2)
         return ret.length>0
     }

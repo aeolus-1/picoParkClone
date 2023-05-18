@@ -3,9 +3,22 @@ var currentLevel = {}
 class LevelHandler {
     constructor(game) {
         this.game = game
+        this.levelComp = Matter.Composite.create()
+        Matter.Composite.add(this.game.matter.engine.world, this.levelComp)
         
         this.currentLevel={}
 
+    }
+    restartLevel() {
+        this.game.doors = []
+        this.game.entities = []
+        this.game.button = []
+        this.game.triggers = []
+
+        Matter.Composite.remove(this.game.matter.engine.world, this.levelComp)
+        this.levelComp = Matter.Composite.create()
+        Matter.Composite.add(this.game.matter.engine.world, this.levelComp)
+        
     }
     loadLevel(dat) {
         var levelData = dat,
@@ -25,6 +38,10 @@ class LevelHandler {
             (cellsize.x*0.5)+(-width*0.5)+(window.innerWidth*0.5),
             (cellsize.y*0.5)+(-height*0.5)+(window.innerHeight*0.5),
         )
+        for (let i = 0; i < this.game.players.length; i++) {
+            const player = this.game.players[i];
+            player.restart()
+        }
         for (let x = 0; x < levelMap.length; x++) {
             const row = levelMap[x];
             for (let y = 0; y < row.length; y++) {
@@ -49,13 +66,13 @@ class LevelHandler {
                 if (cell^wallone) {
                     let dir = ((cell-wallone))
                     let wall = Matter.Bodies.rectangle((y*cellsize.y),((x+0.5)*cellsize.x)+(wallThickness*0.5*-dir), cellsize.y+(wallThickness*0), wallThickness, options)
-                    Matter.Composite.add(this.game.matter.engine.world, wall)
+                    Matter.Composite.add(this.levelComp, wall)
                 }
                 if (cell^walltwo) {
                     let dir = ((cell-walltwo))
     
                     let wall = Matter.Bodies.rectangle(((y+0.5)*cellsize.y)+(wallThickness*0.5*-dir),(x)*cellsize.x, wallThickness,cellsize.x+(wallThickness*0), options)
-                    Matter.Composite.add(this.game.matter.engine.world, wall)
+                    Matter.Composite.add(this.levelComp, wall)
                 }
                 
             }
@@ -73,6 +90,7 @@ class LevelHandler {
             dor.trigger = this.game.triggerHandler.addTrigger(v((dor.pos.x-0.5)*cellsize.x,(dor.pos.y-1.5)*cellsize.y),v(cellsize.x*2,cellsize.y*2))
             this.game.doors.push(dor)
             dor.trigger.onIn = dor.onIn
+            dor.playerCount = this.game.players.length
 
         }
         for (let i = 0; i < levelData.keys.length; i++) {
