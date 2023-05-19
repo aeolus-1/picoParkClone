@@ -51,7 +51,7 @@ class MatterHandler {
         },
         ...options,
     })
-
+    Matter.Body.setPosition(rect, pos)
     Matter.Composite.add(comp, rect);
 
     return rect

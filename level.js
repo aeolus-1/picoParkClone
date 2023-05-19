@@ -14,6 +14,7 @@ class LevelHandler {
         this.game.entities = []
         this.game.button = []
         this.game.triggers = []
+        this.game.constraints = []
 
         Matter.Composite.remove(this.game.matter.engine.world, this.levelComp)
         this.levelComp = Matter.Composite.create()
@@ -85,7 +86,6 @@ class LevelHandler {
             const but = levelData.buttons[i];
             let cellsize = this.game.levelHandler.currentLevel.cellsize
             but.trigger = this.game.triggerHandler.addTrigger(v((but.pos.x-0)*cellsize.x,(but.pos.y-0)*cellsize.y),v(cellsize.x,cellsize.y))
-            console.log(but)
             but.trigger.onEnter = but.onPress
             but.trigger.onIn = but.onIn
         }
@@ -95,6 +95,11 @@ class LevelHandler {
             this.game.doors.push(dor)
             dor.trigger.onIn = dor.onIn
             dor.playerCount = this.game.players.length
+
+        }
+        for (let i = 0; i < levelData.blocks.length; i++) {
+            const boc = levelData.blocks[i];
+            this.game.blockHandler.addBlock(boc.pos, boc.size, boc.options)
 
         }
         for (let i = 0; i < levelData.keys.length; i++) {

@@ -9,6 +9,7 @@ class Game {
         this.constraints = []
         this.buttons = []
         this.doors = []
+        this.blocks = []
         this.triggers = []
 
         this.entities = []
@@ -16,6 +17,7 @@ class Game {
         this.matter = new MatterHandler(this)
         this.triggerHandler = new TriggerHandler(this)
         this.playerhandler = new PlayerHandler(this)
+        this.blockHandler = new BlockHandler(this)
         this.levelHandler = new LevelHandler(this)
         this.renderer = new Renderer(this)
         this.constraintHandler = new ConstraintHandler(this)
@@ -74,11 +76,9 @@ class Game {
         
         
         
-/*
-        this.playerhandler.addPlayer({
-            controls:["a","d","w","s"],
-            color:"green",
-        }) 
+
+       
+        /*
         
         this.playerhandler.addPlayer({
             controls:["a","d","w","s"],
@@ -103,7 +103,7 @@ class Game {
             color:"yellow",
         }) */
 
-        this.levelHandler.loadLevel(levels.one)
+        this.levelHandler.loadLevel(levels.four)
 
         
     }

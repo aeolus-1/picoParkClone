@@ -12,23 +12,26 @@ class ConstraintHandler {
         var bodyA = c.bodyA.body,
             bodyB = c.bodyB.body
 
-        var dst = getDst(bodyA.position,bodyB.position),
-            forceStrength = Math.min(Math.max(Math.pow(dst/100,2),0),Infinity)*0.1,
-            angle = (-getAngle(bodyA.position,bodyB.position))-(90*(Math.PI/180))
+        if (!bodyA.player.ready&&!bodyB.player.ready) {
 
-        var forceVector = v(
-            forceStrength*Math.cos(angle),
-            forceStrength*Math.sin(angle),
-        )
-        
-        if (1) Matter.Body.setPosition(bodyA, v(
-            bodyA.position.x+(forceVector.x*10),
-            bodyA.position.y,
-        ))
-        if (1) Matter.Body.setVelocity(bodyA, v(
-            bodyA.velocity.x,
-            bodyA.velocity.y+(forceVector.y),
-        ))
+            var dst = getDst(bodyA.position,bodyB.position),
+                forceStrength = Math.min(Math.max(Math.pow(dst/100,2),0),Infinity)*0.1,
+                angle = (-getAngle(bodyA.position,bodyB.position))-(90*(Math.PI/180))
+
+            var forceVector = v(
+                forceStrength*Math.cos(angle),
+                forceStrength*Math.sin(angle),
+            )
+            
+            if (1) Matter.Body.setPosition(bodyA, v(
+                bodyA.position.x+(forceVector.x*10),
+                bodyA.position.y,
+            ))
+            if (1) Matter.Body.setVelocity(bodyA, v(
+                bodyA.velocity.x,
+                bodyA.velocity.y+(forceVector.y),
+            ))
+        }
 
     }
     addConstraint(options) {

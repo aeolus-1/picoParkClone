@@ -91,7 +91,7 @@ class Player {
         this.scale = 1
         console.log(this.game)
 
-        this.body = this.game.matter.addBody(v(200,-(Math.random()*200)),v(40,46),{
+        this.body = this.game.matter.addBody(v(200,this.game.players.length*50),v(40,46),{
             ...options.bodyOptions,
             inertia:Infinity,
             
@@ -137,7 +137,7 @@ class Player {
         this.keys = {...keys}
     }
     testFalling() {
-        if (this.body.position.y>=window.innerHeight) Matter.Body.setPosition(this.body, v(
+        if (this.body.position.y>=window.innerHeight*3) Matter.Body.setPosition(this.body, v(
             100,
             -this.game.renderer.offset.y-20,
             ))

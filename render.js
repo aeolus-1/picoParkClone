@@ -91,11 +91,13 @@ class Renderer {
     renderConstraints() {
         for (let i = 0; i < this.game.constraints.length; i++) {
             const con = this.game.constraints[i];
-            this.ctx.beginPath()
-            this.ctx.moveTo(con.bodyA.body.position.x,con.bodyA.body.position.y)
-            this.ctx.lineTo(con.bodyB.body.position.x,con.bodyB.body.position.y)
-            this.ctx.stroke()
-            this.ctx.closePath()
+            if (!con.bodyA.ready&&!con.bodyB.ready) {
+                this.ctx.beginPath()
+                this.ctx.moveTo(con.bodyA.body.position.x,con.bodyA.body.position.y)
+                this.ctx.lineTo(con.bodyB.body.position.x,con.bodyB.body.position.y)
+                this.ctx.stroke()
+                this.ctx.closePath()
+            }
             
         }
     }
@@ -125,6 +127,12 @@ class Renderer {
                     (but.pos.x-0.5)*cellsize.x,(but.pos.y-0.5)*cellsize.y,cellsize.x,cellsize.y)
                 }
             
+        }
+    }
+    renderBlocks() {
+        for (let i = 0; i < this.game.blocks.length; i++) {
+            const boc = this.game.blocks[i];
+            console.log(boc)
         }
     }
     renderDoors() {
@@ -193,6 +201,7 @@ class Renderer {
         }
         this.renderDoors()
         this.renderButtons()
+        this.renderBlocks()
 
         if(this.debug) {
             var bodies = Matter.Composite.allBodies(this.game.matter.engine.world)
