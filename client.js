@@ -7,6 +7,8 @@ class Client {
         this.roomConn;
         this.mainConn;
 
+        this.recentPing = 0
+
         this.username = prompt("username?")
     }
     init(roomId) {
@@ -18,28 +20,30 @@ class Client {
         }
     }
 
-    processData(d) {
+    processData(d,rd) {
         d = JSON.parse(d)
-        if (d.reconnectToThis) {
-            this.mainConn = new Connection2W()
-            this.mainConn.connect(d.reconnectToThis)
-            this.mainConn.e.onData = (d)=>{
-                this.processData(d)
+        if (true) {
+            if (d.reconnectToThis) {
+                this.mainConn = new Connection2W()
+                this.mainConn.connect(d.reconnectToThis)
+                this.mainConn.e.onData = (d, rd)=>{
+                    this.processData(d,rd)
+                }
+                this.mainConn.e.onConnection = ()=>{
+                    this.mainConn.send(JSON.stringify({
+                        setUsername:this.username
+                    }))
+                }
             }
-            this.mainConn.e.onConnection = ()=>{
-                this.mainConn.send(JSON.stringify({
-                    setUsername:this.username
-                }))
+            if (d.playerData) {
+                this.updateHostPlayers(d.playerData)
             }
-        }
-        if (d.playerData) {
-            this.updateHostPlayers(d.playerData)
-        }
-        if (d.setColor) {
-            this.mainPlayer.color = d.setColor
-        }
-        if (d.startGame) {
-            startGame()
+            if (d.setColor) {
+                this.mainPlayer.color = d.setColor
+            }
+            if (d.startGame) {
+                startGame()
+            }
         }
     }
     updateHost() {

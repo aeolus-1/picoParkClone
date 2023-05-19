@@ -253,8 +253,7 @@ class Connection2W {
     } if (d.terminate) {
       this.terminate(true)
     } else {
-
-      this.e.onData(d.content)
+      this.e.onData(d.content, d)
     }
   }
 
