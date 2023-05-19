@@ -12,6 +12,7 @@ canvas.height = height*32
 var grid = []
 var selected = "1"
 var mDown = false
+var fill = false
 
 
 for(let a = 0; a < width; a++) {
@@ -47,8 +48,10 @@ setInterval(() => {
 }, 1000/60)
 
 addEventListener("mousedown", (e) => {
+    if(fill == true) fillAreaEditor(Math.floor(e.clientX/32),Math.floor(e.clientY/32),selected)
     grid[Math.floor(e.clientX/32)][Math.floor(e.clientY/32)] = selected
     mDown = true
+    
 })
 addEventListener("mousemove", (e) => {
     if(mDown === true) grid[Math.floor(e.clientX/32)][Math.floor(e.clientY/32)] = selected
@@ -57,35 +60,50 @@ addEventListener("mouseup", (e) => {
     mDown = false
 })
 addEventListener("keydown", (e) => {
-    selected = LetterCode[e.key]
-    if(selected!=undefined) console.log(selected)
+    if(LetterCode[e.key] != undefined) {
+        selected = LetterCode[e.key]
+        document.getElementById("selectedTile").innerHTML = "selected tile = "+LetterCode[e.key]
+    }
+    if(selected!=undefined) {console.log(selected)}
+    if(e.key == "Shift") {fill = true; document.getElementById("filling").innerHTML = "filling = true"}
 })
+addEventListener("keyup", (e) => {if(e.key=="Shift"){fill=false;document.getElementById("filling").innerHTML = "filling = false"}})
 
 function fillAreaEditor(x, y, type) {
-    let tile = grid[x][y]
-    let tileType = tile.type
-    tile.type = type
+    let tile = {x:x,y:y}
+    let tileType = grid[tile.x][tile.y]
+    console.log(tile, tileType, type)
     check(tile)
     function check(sTile) {
-        if (sTile.up !== undefined) {
-            if (sTile.up.type === tileType) {
-                sTile.up.type = type
-                check(sTile.up)
+        function checkDefine(a, b) {
+            if(grid[a] === undefined) return false
+            if(grid[a][b] === undefined) return false
+            return true
+        }
+        console.log(sTile)
+        let up = {x:sTile.x,y:sTile.y-1}
+        let right = {x:sTile.x+1,y:sTile.y}
+        let down = {x:sTile.x,y:sTile.y+1}
+        let left = {x:sTile.x-1,y:sTile.y}
+        if (checkDefine(up.x, up.y)) {
+            if (grid[up.x][up.y] === tileType) {
+                grid[up.x][up.y] = type
+                check(up)
             }
-        } if (sTile.left !== undefined) {
-            if (sTile.left.type === tileType) {
-                sTile.left.type = type
-                check(sTile.left)
+        } if (checkDefine(right.x, right.y)) {
+            if (grid[right.x][right.y] === tileType) {
+                grid[right.x][right.y] = type
+                check(right)
             }
-        } if (sTile.down !== undefined) {
-            if (sTile.down.type === tileType) {
-                sTile.down.type = type
-                check(sTile.down)
+        } if (checkDefine(down.x, down.y)) {
+            if (grid[down.x][down.y] === tileType) {
+                grid[down.x][down.y] = type
+                check(down)
             }
-        } if (sTile.right !== undefined) {
-            if (sTile.right.type === tileType) {
-                sTile.right.type = type
-                check(sTile.right)
+        } if (checkDefine(left.x, left.y)) {
+            if (grid[left.x][left.y] === tileType) {
+                grid[left.x][left.y] = type
+                check(left)
             }
         }
     }
