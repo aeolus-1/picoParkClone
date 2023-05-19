@@ -103,7 +103,7 @@ class Game {
             color:"yellow",
         }) */
 
-        this.levelHandler.loadLevel(levels.four)
+        this.levelHandler.loadLevel(levels.one)
 
         
     }
