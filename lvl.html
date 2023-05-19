@@ -1,19 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
     <head>
-        <link rel="icon" type="image/x-icon" href="./imgs/favicon.ico">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Midnight Woods</title>
+        <title>editor</title>
+        <style>
+            #selectedTile {
+                position: absolute;
+                left: 3px;
+                top: 320px;
+            }
+            #filling {
+                position: absolute;
+                left: 3px;
+                top: 340px;
+            }
+        </style>
     </head>
+<body>
+    
     <body>
         <canvas id="myCanvas" style="border: 1px solid black; position: absolute; left:0px; top:0px;"></canvas>
+        <br>
+        <p id="selectedTile"> selected tile = 1 </p>
+        <p id="filling"> filling = false </p>
         <script src="./common.js"></script>
         <script src="./editor.js"></script>
         
