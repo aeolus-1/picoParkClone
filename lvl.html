@@ -5,29 +5,31 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>editor</title>
         <style>
-            #selectedTile {
-                position: absolute;
+            p {
                 left: 3px;
                 top: 320px;
             }
-            #filling {
-                position: absolute;
-                left: 3px;
-                top: 340px;
-            }
+            
         </style>
     </head>
 <body>
     
     <body>
-        <canvas id="myCanvas" style="border: 1px solid black; position: absolute; left:0px; top:0px;"></canvas>
+        <canvas id="myCanvas" style="border: 1px solid black; "></canvas>
         <br>
         <p id="selectedTile"> selected tile = 1 </p>
         <p id="filling"> filling = false </p>
+        <p id="legend">
+
+        </p>
         <script src="./common.js"></script>
         <script src="./editor.js"></script>
         
-       
+        <button onClick="(function(){
+            convert()
+            return false;
+        })();return false;">convert</button><br>
+       <textarea name="" id="convert" cols="30" rows="10" style="width:200px;height:200px"></textarea>
     </body>
 </body>
 </html>

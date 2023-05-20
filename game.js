@@ -111,7 +111,7 @@ class Game {
             color:"yellow",
         }) */
 
-        this.levelHandler.loadLevel(levels.two)
+        this.levelHandler.loadLevel(levels.one)
 
         
     }

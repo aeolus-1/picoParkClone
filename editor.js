@@ -18,21 +18,34 @@ var fill = false
 for(let a = 0; a < width; a++) {
     grid.push([]) 
     for(let b = 0; b < height; b++) {
-        grid[a][b] = "1"
+        grid[a][b] = b==height-1?"1":"0"
     }
 }
 
 setInterval(() => {
+    ctx.fillStyle = "#000"
+    ctx.fillRect(0,0,canvas.width,canvas.height)
     for(let x = 0; x < width; x++) {
         for(let y = 0; y < height; y++) {
+            let size = {x:1,y:1}
             if(grid[x][y] === "1") {
                 ctx.fillStyle = "#32a852"
             } else if(grid[x][y] === "tree") {
                 ctx.fillStyle = "#385741"
+            } else if(grid[x][y] === "door") {
+                size.x = 2
+                size.y = 2
+                ctx.fillStyle = "#6e3516"
+            } else if(grid[x][y] === "key") {
+               
+                ctx.fillStyle = "#9c7c14"
+
             } else {
-                ctx.fillStyle = "#0a0a0a"
+                ctx.fillStyle = "#0000"
+
             }
-            ctx.fillRect(x*32, y*32, 42, 32)
+            ctx.fillRect(x*32, y*32, 32*size.x, 32*size.y)
+            
         }
     }
 
@@ -121,15 +134,36 @@ function ToType() {
 }
 
 function convert() {
+    
+
+    
+
     console.log(grid)
+
+    
     g = []
+    let keys = [],
+        doors = []
     for(let r = 0; r < height; r++) {
         g.push(new Array())
         for(let t = 0; t < width; t++) {
-            g[r][t] = Number(grid[t][r])
+            let tile = grid[t][r]
+
+            g[r][t] = tile=="1"?"1":"0"
+            switch (tile) {
+                case "door":
+                    doors.push(v(t+1,r+2))
+                    break;
+            
+                case "key":
+                    keys.push(v(t,r))
+                    break;
+            
+                default:
+                    break;
+            }
         }
     }
-    console.log(g)
     e = ``
     for(let r = 0; r < height; r++) {
         e += `[`
@@ -140,7 +174,55 @@ function convert() {
         if(r!=height-1)e += `],`
         else e += `]`
     }
-    console.log(e)
+    
+    keys = (keys.map(k=>{
+        return `
+            v(${k.x},${k.y}),`
+    }).join(""))
+
+    doors = (doors.map(k=>{
+        return `
+        new Door(v(${k.x},${k.y}),{
+            nextLevel:"one",
+            
+        }),`
+    }).join(""))
+
+
+    
+
+    var details = {
+        playersBinded:0,
+        map:e,
+
+        buttons:[],
+
+        keys:keys,
+
+        blocks:[],
+
+        doors:doors,
+    }
+
+
+    var template = `
+    "tempName":{
+        playersBinded:${details.playersBinded},
+        map:[
+        ${e}
+        
+
+    ],
+        buttons:[
+            
+        ],
+        keys:[${details.keys}],
+        blocks:[],
+        doors:[${details.doors}]
+    },`
+
+    document.getElementById("convert").value = template
+    console.log(template)
 }
 
 
@@ -148,6 +230,16 @@ function convert() {
 var LetterCode = {
     "a": "1",
     "z": "0",
+    "d": "door",
+    "k": "key",
+}
+
+window.onload = ()=>{
+    for (let i = 0; i < Object.keys(LetterCode).length; i++) {
+        const l = Object.keys(LetterCode)[i];
+        document.getElementById("legend").innerHTML += `-- ${l}:${LetterCode[l]}<br>`
+        console.log(`${l}:${LetterCode[l]}`)
+    }
 }
 
 var TypeCode = {
