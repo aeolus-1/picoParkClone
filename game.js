@@ -28,10 +28,18 @@ class Game {
 
         this.updateMobiles = function(self){
             self.updateDelta()
+            
+
+            self.playerhandler.updateControls()
+            self.blockHandler.updateBlocks()
+
             self.playerhandler.updatePlayers()
+            
+
             self.constraintHandler.updateConstraints()
             self.triggerHandler.updateTriggers()
             self.updateEntities()
+
 
         }
 
@@ -103,7 +111,7 @@ class Game {
             color:"yellow",
         }) */
 
-        this.levelHandler.loadLevel(levels.one)
+        this.levelHandler.loadLevel(levels.two)
 
         
     }

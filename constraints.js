@@ -22,11 +22,7 @@ class ConstraintHandler {
                 forceStrength*Math.cos(angle),
                 forceStrength*Math.sin(angle),
             )
-            
-            if (1) Matter.Body.setPosition(bodyA, v(
-                bodyA.position.x+(forceVector.x*10),
-                bodyA.position.y,
-            ))
+            bodyA.player.constraintVel.x += forceVector.x
             if (1) Matter.Body.setVelocity(bodyA, v(
                 bodyA.velocity.x,
                 bodyA.velocity.y+(forceVector.y),

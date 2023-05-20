@@ -2,7 +2,7 @@ class Door {
     constructor(pos,options) {
         options = {
 
-            
+            open:false,
             ...options,
 
 
@@ -11,7 +11,7 @@ class Door {
 
         this.nextLevel = options.nextLevel
         
-        this.open = false
+        this.open = options.open
         this.prepped = options.players
         this.playerCount = options.playerCount
 
@@ -28,19 +28,23 @@ class Door {
                     if (e.player.exitTimer<=0) {
                         e.player.readyUp()
                         this.playerCount -= 1
-                        if (this.playerCount <= 0) {
-                            e.player.game.levelHandler.restartLevel()
-                            e.player.game.levelHandler.loadLevel(levels[this.nextLevel])
+                        if (this.playerCount <= 0 && !window.clientConnection) {
+                            e.player.game.levelHandler.setLevel(this.nextLevel)
+                            if (window.hostConnection) {
+                                hostConnection.broadcast(JSON.stringify({
+                                    setLevel:this.nextLevel,
+                                }))
+                            }
 
                         }
                     }
                 } else {
                     e.player.exitTimer = 60
                 }
+                
             }
-        }
-        
 
+        }
 
     }
     

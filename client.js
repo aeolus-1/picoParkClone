@@ -44,6 +44,10 @@ class Client {
             if (d.startGame) {
                 startGame()
             }
+            if (d.setLevel) {
+                console.log(d.setLevel)
+                this.game.levelHandler.setLevel(d.setLevel)
+            }
         }
     }
     updateHost() {

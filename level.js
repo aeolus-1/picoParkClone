@@ -9,16 +9,25 @@ class LevelHandler {
         this.currentLevel={}
 
     }
+    setLevel(name) {
+        this.game.levelHandler.restartLevel()
+        this.game.levelHandler.loadLevel(levels[name])
+    }
     restartLevel() {
         this.game.doors = []
         this.game.entities = []
         this.game.button = []
         this.game.triggers = []
         this.game.constraints = []
+        this.game.blocks = []
 
         Matter.Composite.remove(this.game.matter.engine.world, this.levelComp)
         this.levelComp = Matter.Composite.create()
         Matter.Composite.add(this.game.matter.engine.world, this.levelComp)
+        
+        Matter.Composite.remove(this.game.matter.engine.world, this.game.blockHandler.comp)
+        this.game.blockHandler.comp = Matter.Composite.create()
+        Matter.Composite.add(this.game.matter.engine.world, this.game.blockHandler.comp)
         
     }
     loadLevel(dat) {
@@ -99,7 +108,7 @@ class LevelHandler {
         }
         for (let i = 0; i < levelData.blocks.length; i++) {
             const boc = levelData.blocks[i];
-            this.game.blockHandler.addBlock(boc.pos, boc.size, boc.options)
+            this.game.blockHandler.addBlock(v(boc.pos.x*50,boc.pos.y*50), boc.size, boc)
 
         }
         for (let i = 0; i < levelData.keys.length; i++) {

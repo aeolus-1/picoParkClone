@@ -132,7 +132,20 @@ class Renderer {
     renderBlocks() {
         for (let i = 0; i < this.game.blocks.length; i++) {
             const boc = this.game.blocks[i];
-            console.log(boc)
+            let size = v(
+                boc.size.x*50,
+                boc.size.y*50,
+            )
+            for (let x = 0; x < boc.size.x; x++) {
+                for (let y = 0; y < boc.size.y; y++) {
+                    this.ctx.drawImage(levelAtlas, 
+                        655,196,
+                        161,161,
+                        (boc.rect.position.x-(size.x*0.5))+(x*50),(boc.rect.position.y-(size.y*0.5))+(y*50),50,50
+                        )
+                }                
+            }
+
         }
     }
     renderDoors() {
@@ -200,8 +213,9 @@ class Renderer {
             }
         }
         this.renderDoors()
-        this.renderButtons()
         this.renderBlocks()
+
+        this.renderButtons()
 
         if(this.debug) {
             var bodies = Matter.Composite.allBodies(this.game.matter.engine.world)
