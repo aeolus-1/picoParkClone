@@ -351,6 +351,7 @@ class Renderer {
     }
     renderDebug() {
         var strings = [
+            "break",
             "v69.420",
             "pico park clone | aeolus-1 on github",
                 (new Date()),
