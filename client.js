@@ -45,8 +45,8 @@ class Client {
                 startGame()
             }
             if (d.setLevel) {
-                console.log(d.setLevel)
-                this.game.levelHandler.setLevel(d.setLevel)
+                this.game.renderer.levelTransistion(d.setLevel)
+                
             }
         }
     }

@@ -54,8 +54,11 @@ class Game {
     }
     
 
-    initRender() {
+    async initRender() {
         this.renderer.init()
+        await this.renderer.wait(700)
+        await this.renderer.showTitle(`-- ${this.runTemp?"untitled level":"one"} --`, 500)
+        await this.renderer.setFade(0, 1000)
     }
     initPhysics() {
         this.matter.init()
@@ -114,7 +117,7 @@ class Game {
         if (this.runTemp) {
             this.levelHandler.loadLevel(levels.tempLevel)
         } else {
-            this.levelHandler.loadLevel(levels.one)
+            this.levelHandler.loadLevel(levels.four)
         }
 
         

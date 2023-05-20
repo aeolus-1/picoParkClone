@@ -12,9 +12,20 @@
     <title id="title">pico recreational area</title>
 
     <style>
+        @font-face {
+            font-family: squareforced;
+            src: local('FORCEDSQUARE'), url(./FORCEDSQUARE.ttf) format('truetype');
+
+        }
         body {
             margin: 0%;
             overflow: hidden;
+        }
+        .overlay {
+            position: fixed;
+            top: 0%;
+            left: 0%;
+            z-index: 10;
         }
     </style>
 </head>
@@ -33,7 +44,9 @@
     </script>
 
     <canvas id="c" style="display: none;"></canvas>
-
+    <div class="overlay">
+        <a href="./index.html">Back to Home</a>
+    </div>
     <script src="multiplayer.js"></script>
     <script src="buttons.js"></script>
     <script src="door.js"></script>
@@ -63,11 +76,11 @@
 
     <script src="menu.js"></script>
 
-    <div id="menu">st
-        <a href="./index.html">Back to Home</a>
+    <div id="menu">
+        <br>
         <div id="host" style="display: none;">
             <div id="gameDetails">
-                <div id="gameCode">Code: <b id="roomCode">fetching</b></div>
+                <div id="gameCode">Code: <b id="roomCode">fetching</b><span id="incoming"></span></div>
             </div>
             <div id="memberList" style="border: solid black 1px; width:200px">
                 <h2>Members:</h2>
@@ -100,7 +113,7 @@
     </div>
 
     <script>
-        
+        window.localfile = location.protocol=="file:"
         function initGame() {
             window.mainGame = new Game()
 
@@ -135,7 +148,7 @@
 
 
         window.onload=()=>{
-            
+            _loadFont("squareforced")
 
             if (urlData.host) {
                 document.getElementById("host").style.display = ""

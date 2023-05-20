@@ -28,6 +28,7 @@ setInterval(() => {
     for(let x = 0; x < width; x++) {
         for(let y = 0; y < height; y++) {
             let size = {x:1,y:1}
+            ctx.strokeStyle = "#0000"
             if(grid[x][y] === "1") {
                 ctx.fillStyle = "#32a852"
             } else if(grid[x][y] === "tree") {
@@ -35,7 +36,17 @@ setInterval(() => {
             } else if(grid[x][y] === "door") {
                 size.x = 2
                 size.y = 2
+                ctx.fillStyle = "#8c602e"
+            } else if(grid[x][y].split("|")[0] === "block") {
+                size.x = parseInt(grid[x][y].split("|")[1].split(",")[0])
+                size.y = parseInt(grid[x][y].split("|")[1].split(",")[1])
                 ctx.fillStyle = "#6e3516"
+                ctx.strokeStyle = "#fff"
+
+            }  else if(grid[x][y] === "shrinkingButton") {
+                ctx.fillStyle = "#f0a"
+            } else if(grid[x][y] === "growingButton") {
+                ctx.fillStyle = "#f03"
             } else if(grid[x][y] === "key") {
                
                 ctx.fillStyle = "#9c7c14"
@@ -44,7 +55,10 @@ setInterval(() => {
                 ctx.fillStyle = "#0000"
 
             }
+            
             ctx.fillRect(x*32, y*32, 32*size.x, 32*size.y)
+            let buffer = 10
+            ctx.strokeRect((x*32)+buffer, (y*32)+buffer, (32*size.x)-(buffer*2), (32*size.y)-(buffer*2))
             
         }
     }
@@ -60,14 +74,14 @@ setInterval(() => {
     }
 }, 1000/60)
 
-addEventListener("mousedown", (e) => {
+canvas.addEventListener("mousedown", (e) => {
     if(fill == true) fillAreaEditor(Math.floor(e.clientX/32),Math.floor(e.clientY/32),selected)
-    grid[Math.floor(e.clientX/32)][Math.floor(e.clientY/32)] = selected
+    grid[Math.floor((e.offsetX)/32)][Math.floor((e.offsetY)/32)] = selected
     mDown = true
     
 })
 addEventListener("mousemove", (e) => {
-    if(mDown === true) grid[Math.floor(e.clientX/32)][Math.floor(e.clientY/32)] = selected
+    if(mDown === true) grid[Math.floor(e.offsetX/32)][Math.floor(e.offsetY/32)] = selected
 })
 addEventListener("mouseup", (e) => {
     mDown = false
@@ -75,6 +89,10 @@ addEventListener("mouseup", (e) => {
 addEventListener("keydown", (e) => {
     if(LetterCode[e.key] != undefined) {
         selected = LetterCode[e.key]
+        if (selected=="block") {
+            let size = getCurrentBlockSize()
+            selected += `|${size.x},${size.y},${size.min}`
+        }
         document.getElementById("selectedTile").innerHTML = "selected tile = "+LetterCode[e.key]
     }
     if(selected!=undefined) {console.log(selected)}
@@ -93,7 +111,6 @@ function fillAreaEditor(x, y, type) {
             if(grid[a][b] === undefined) return false
             return true
         }
-        console.log(sTile)
         let up = {x:sTile.x,y:sTile.y-1}
         let right = {x:sTile.x+1,y:sTile.y}
         let down = {x:sTile.x,y:sTile.y+1}
@@ -146,14 +163,16 @@ function convert() {
     
     g = []
     let keys = [],
-        doors = []
+        doors = [],
+        blocks = [],
+        gButtons = [],
+        sButtons = []
     for(let r = 0; r < height; r++) {
         g.push(new Array())
         for(let t = 0; t < width; t++) {
-            let tile = grid[t][r]
-
-            g[r][t] = tile=="1"?"1":"0"
-            switch (tile) {
+            let tile = grid[t][r].split("|")
+            g[r][t] = tile[0]=="1"?"1":"0"
+            switch (tile[0]) {
                 case "door":
                     doors.push(v(t+1,r+2))
                     break;
@@ -161,7 +180,23 @@ function convert() {
                 case "key":
                     keys.push(v(t,r))
                     break;
-            
+
+                case "growingButton":
+                    gButtons.push(v(t,r))
+                    break;
+                case "shrinkingButton":
+                    sButtons.push(v(t,r))
+                    break;
+
+                case "block":
+                    console.log(tile)
+                    blocks.push({
+                        pos:v(t,r),
+                        size:v(parseInt(tile[1].split(",")[0]),parseInt(tile[1].split(",")[1])),
+                        minPlayers:parseInt(tile[1].split(",")[2])
+                    })
+                    break;
+                
                 default:
                     break;
             }
@@ -186,11 +221,39 @@ function convert() {
     doors = (doors.map(k=>{
         return `
         new Door(v(${k.x},${k.y}),{
-            nextLevel:"one",
+            nextLevel:"tempLevel",
             
         }),`
     }).join(""))
 
+    blocks = (blocks.map(k=>{
+        return `
+        {
+            pos:v(${k.pos.x},${k.pos.y}),
+            size:v(${k.size.x},${k.size.y}),
+            minPlayers:${k.minPlayers}
+        },`
+    }).join(""))
+
+    gButtons = (gButtons.map(k=>{
+        return `
+        new Button(v(${k.x},${k.y}),{
+            onPlayer:(e)=>{
+                e.player.setScale(Math.min(Math.max(e.player.scale+0.0075, 0.5), 2))
+                
+            }
+        }),`
+    }).join(""))
+    sButtons = (sButtons.map(k=>{
+        return `
+        new Button(v(${k.x},${k.y}),{
+            onPlayer:(e)=>{
+                e.player.setScale(Math.min(Math.max(e.player.scale-0.0075, 0.5), 2))
+                
+            }
+        }),`
+    }).join(""))
+     
 
     
 
@@ -198,18 +261,18 @@ function convert() {
         playersBinded:0,
         map:e,
 
-        buttons:[],
+        buttons:gButtons+sButtons,
 
         keys:keys,
 
-        blocks:[],
+        blocks:blocks,
 
         doors:doors,
     }
 
 
-    var template = `"tempName":{playersBinded:${details.playersBinded},map:[${e}],buttons:[],keys:[${details.keys}],blocks:[],doors:[${details.doors}]},`
-
+    var template = `"tempName":{playersBinded:${details.playersBinded},map:[${e}],buttons:[${details.buttons}],keys:[${details.keys}],blocks:[${details.blocks}],doors:[${details.doors}]},`
+    console.log(template)
     document.getElementById("convert").value = btoa(template)
     return template
 }
@@ -221,6 +284,9 @@ var LetterCode = {
     "z": "0",
     "d": "door",
     "k": "key",
+    "s": "shrinkingButton",
+    "g": "growingButton",
+    "b": "block",
 }
 
 window.onload = ()=>{

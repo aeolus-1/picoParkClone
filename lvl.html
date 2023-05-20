@@ -9,6 +9,9 @@
                 left: 3px;
                 top: 320px;
             }
+            input {
+                width:30px;
+            }
             
         </style>
     </head>
@@ -18,9 +21,28 @@
         <a href="./index.html">Back to Home</a><br>
         <canvas id="myCanvas" style="border: 1px solid black; "></canvas>
         <br>
+        
         <p id="selectedTile"> selected tile = 1 </p>
         <p id="filling"> filling = false </p>
+        <p> Block size | x : <input id="blockX" onchange=setBlock() value="1" type="number">| y : <input id="blockY" onchange=setBlock() value="1" type="number">| required players: <input id="requiredPlayers" onchange=setBlock() value="0" type="number"></p>
+        <script>
+            function setBlock() {
+                console.log("ayy")
+                if (selected.split("|")[0]=="block") {
+                    let size = getCurrentBlockSize()
+                    selected = `block|${size.x},${size.y},${size.min}`
+                }
+            }
+            function getCurrentBlockSize() {
+                let ret = v(
+                    parseInt(document.getElementById("blockX").value),
+                    parseInt(document.getElementById("blockY").value),
+                )
+                return {...ret,min:parseInt(document.getElementById("requiredPlayers").value)}
+            }
+        </script>
         <p id="legend">
+            
 
         </p>
         <script src="./common.js"></script>

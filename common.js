@@ -6,6 +6,21 @@ function createElementFromHTML(htmlString) {
 	return div.firstChild;
   }
 
+  function _loadFont(fontname){
+    var canvas = document.createElement("canvas");
+    //Setting the height and width is not really required
+    canvas.width = 16;
+    canvas.height = 16;
+    var ctx = canvas.getContext("2d");
+
+    //There is no need to attach the canvas anywhere,
+    //calling fillText is enough to make the browser load the active font
+
+    //If you have more than one custom font, you can just draw all of them here
+    ctx.font = "4px "+fontname;
+    ctx.fillText("text", 0, 8);
+}
+
 function randChar() {
 	return (Math.random().toString(36).substr(2, 4)).toUpperCase()
 }

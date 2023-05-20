@@ -136,7 +136,6 @@ var levels = {
                 
                 pos:v(11,9),
                 size:v(1,2),
-                minPlayers:1,
             },
             {
                 pos:v(16,9),

@@ -10,6 +10,7 @@ class Block {
         this.size = size
 
         this.locked = ()=>{return Object.keys(this.pressing).length>options.minPlayers-1}
+        this.playersNeeded = ()=>{return (options.minPlayers)-Object.keys(this.pressing).length}
         this.pressing = {}
         this.minPlayers = options.minPlayers
         

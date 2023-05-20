@@ -29,7 +29,7 @@ class Door {
                         e.player.readyUp()
                         this.playerCount -= 1
                         if (this.playerCount <= 0 && !window.clientConnection) {
-                            e.player.game.levelHandler.setLevel(this.nextLevel)
+                            e.player.game.renderer.levelTransistion(this.nextLevel)
                             if (window.hostConnection) {
                                 hostConnection.broadcast(JSON.stringify({
                                     setLevel:this.nextLevel,

@@ -34,6 +34,8 @@ class Host {
 
         }
         this.joinConn.e.onConnection = ()=>{
+            document.getElementById("incoming").textContent = " (incoming connection)"
+
             var newConnection = this.openConnection()
             newConnection.e.onOpening = ()=>{
                 this.joinConn.send(JSON.stringify({
@@ -42,6 +44,8 @@ class Host {
                 setTimeout(() => {
                     this.joinConn.terminate()
                 }, 1000);
+                
+
 
             }
             
@@ -49,6 +53,8 @@ class Host {
         this.joinConn.e.onDisconnection = ()=>{
             this.roomJoinOnline = false
             this.recycleJoinConn()
+            
+
         }
 
 
@@ -70,6 +76,7 @@ class Host {
             }
         }
         connection.e.onConnection = (d)=>{
+            document.getElementById("incoming").textContent = ""
            
             //addPlayerToMenu("yay")
         }

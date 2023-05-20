@@ -11,9 +11,63 @@ class Renderer {
 
         this.offset = v()
 
+        this.transistionSpeed = (localfile)?0.1:1
+
+        this.fadeValue = 1
+        this.displayedTitle = ""
+
         this.debug = false
         window.onresize = ()=>{this.resizeCanvas()}
     }
+    async levelTransistion(nextLevel) {
+        await this.setFade(1, 1000)
+        await this.wait(300)
+        this.game.levelHandler.setLevel(nextLevel)
+        await this.showTitle("-- "+nextLevel+" --", 1000)
+        await this.setFade(0, 1000)
+        
+
+    }
+    async wait(time) {
+        return new Promise((resolve)=>{
+            setTimeout(() => {
+                resolve("done")
+            }, time*this.transistionSpeed);
+        })
+    }
+    async setFade(targetFade, time=10) {
+        return new Promise((resolve, reject) => {
+            var startTime = (new Date()).getTime(),
+                startValue = this.fadeValue,
+                dst = targetFade-this.fadeValue,
+                int = setInterval(() => {
+                    let currentTime = ((new Date()).getTime())-startTime,
+                        timePer = currentTime/(time*this.transistionSpeed)
+
+                    this.fadeValue = startValue+(dst*timePer)
+                    //console.log(timePer)
+
+
+                    if (currentTime>(time*this.transistionSpeed)) {
+                        resolve("done")
+                        clearInterval(int)
+                    }
+            }, 1000/60);
+            
+          });
+    }
+    async showTitle(text, time) {
+        this.displayedTitle = ""
+        return new Promise((resolve, reject) => {
+            this.displayedTitle = text
+            setTimeout(() => {
+                resolve("done")
+            
+            
+            }, time*this.transistionSpeed)
+        })
+    }
+    
     resizeCanvas() {
         this.canvas.width = window.innerWidth
         this.canvas.height = window.innerHeight
@@ -53,8 +107,24 @@ class Renderer {
 
         if (self.debug) self.renderDebug()
 
+        self.renderEffects()
+
         self.lastFPS = (new Date()).getTime()
         requestAnimationFrame(()=>{self.renderLoop(self)})
+    }
+    renderEffects() {
+        let fade = Math.max(Math.min(this.fadeValue,1),0)
+        this.ctx.globalAlpha = fade
+        this.ctx.fillStyle = `rgb(255,255,255)`
+        //console.log(`rgba(255,255,255,${fade})`)
+        this.ctx.fillRect(0,0,this.canvas.width,this.canvas.height)
+        this.renderTitle()
+    }
+    renderTitle() {
+        this.ctx.fillStyle = "#c47418"
+        this.ctx.font = "30px squareforced"
+        let measure = this.ctx.measureText(this.displayedTitle)
+        this.ctx.fillText(this.displayedTitle, (window.innerWidth/2)-(measure.width*0.5),window.innerHeight/2)
     }
 
     renderPlayer(player) {
@@ -136,15 +206,35 @@ class Renderer {
                 boc.size.x*50,
                 boc.size.y*50,
             )
+                
+
             for (let x = 0; x < boc.size.x; x++) {
                 for (let y = 0; y < boc.size.y; y++) {
+                    
+                    let bocPos = v((boc.rect.position.x-(size.x*0.5))+(x*50),(boc.rect.position.y-(size.y*0.5))+(y*50))
                     this.ctx.drawImage(levelAtlas, 
                         655,196,
                         161,161,
-                        (boc.rect.position.x-(size.x*0.5))+(x*50),(boc.rect.position.y-(size.y*0.5))+(y*50),50,50
+                        bocPos.x,bocPos.y,50,50
                         )
+
+                    
                 }                
             }
+            let text = Math.max(boc.playersNeeded(),0),
+                textPos = boc.rect.position
+            if (text>0) {
+                this.ctx.fillStyle = "#c47418"
+                this.ctx.font = "30px squareforced"
+                let measure = this.ctx.measureText(text)
+
+                this.ctx.strokeStyle = "#fff"
+                this.ctx.lineWidth = 3.5
+                this.ctx.strokeText(text, textPos.x-(measure.width*0.5),textPos.y)
+                this.ctx.fillText(text, textPos.x-(measure.width*0.5),textPos.y)
+            }
+
+
 
         }
     }
