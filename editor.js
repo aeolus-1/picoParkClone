@@ -132,7 +132,10 @@ function ToType() {
     }
     return z
 }
-
+function save() {
+    let level = convert()
+    localStorage.setItem("tempLevel", btoa(level))
+}
 function convert() {
     
 
@@ -205,24 +208,10 @@ function convert() {
     }
 
 
-    var template = `
-    "tempName":{
-        playersBinded:${details.playersBinded},
-        map:[
-        ${e}
-        
+    var template = `"tempName":{playersBinded:${details.playersBinded},map:[${e}],buttons:[],keys:[${details.keys}],blocks:[],doors:[${details.doors}]},`
 
-    ],
-        buttons:[
-            
-        ],
-        keys:[${details.keys}],
-        blocks:[],
-        doors:[${details.doors}]
-    },`
-
-    document.getElementById("convert").value = template
-    console.log(template)
+    document.getElementById("convert").value = btoa(template)
+    return template
 }
 
 

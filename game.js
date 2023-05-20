@@ -111,7 +111,11 @@ class Game {
             color:"yellow",
         }) */
 
-        this.levelHandler.loadLevel(levels.one)
+        if (this.runTemp) {
+            this.levelHandler.loadLevel(levels.tempLevel)
+        } else {
+            this.levelHandler.loadLevel(levels.one)
+        }
 
         
     }

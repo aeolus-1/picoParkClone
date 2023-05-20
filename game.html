@@ -9,7 +9,7 @@
     <script src="peer.js"></script>
 
     <link rel="icon" href="./favicon.png">
-    <title>pico recreational area</title>
+    <title id="title">pico recreational area</title>
 
     <style>
         body {
@@ -135,6 +135,8 @@
 
 
         window.onload=()=>{
+            
+
             if (urlData.host) {
                 document.getElementById("host").style.display = ""
             } else if (urlData.join) {
@@ -142,6 +144,18 @@
             }
 
             initGame()
+
+            let tempLevel = localStorage.getItem("tempLevel")
+            console.log(tempLevel)
+            if (tempLevel != null) {
+                let levelString = `({${atob(tempLevel)}})`
+                document.getElementById("gameCode").innerHTML = "-- temp level loaded --"
+                document.getElementById("title").textContent = "temp-level"
+                levels.tempLevel = eval(levelString)["tempName"]
+                mainGame.runTemp = true
+                localStorage.removeItem("tempLevel")
+                    
+            }
         }
 
        

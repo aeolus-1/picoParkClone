@@ -54,7 +54,7 @@ class LevelHandler {
         )
         for (let i = 0; i < this.game.players.length; i++) {
             const player = this.game.players[i];
-            player.restart()
+            player.restart(i)
         }
         for (let x = 0; x < levelMap.length; x++) {
             const row = levelMap[x];

@@ -131,14 +131,14 @@ class Player {
     }
     readyUp() {
         this.ready = true
-        Matter.Body.setPosition(this.body, v(-1000,-10000))
+        Matter.Body.setPosition(this.body, v(-1000,-100000000))
     }
-    restart() {
+    restart(i=0) {
         this.ready = false
         this.exitTimer = 60
         Matter.Body.setPosition(this.body, v(
-            100,
-            -this.game.renderer.offset.y-20,
+            200,
+            -this.game.renderer.offset.y+-20+(-i*50),
             ))
             Matter.Body.setVelocity(this.body, v(
                 0,0

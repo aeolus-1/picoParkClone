@@ -15,6 +15,7 @@
 <body>
     
     <body>
+        <a href="./index.html">Back to Home</a><br>
         <canvas id="myCanvas" style="border: 1px solid black; "></canvas>
         <br>
         <p id="selectedTile"> selected tile = 1 </p>
@@ -28,7 +29,12 @@
         <button onClick="(function(){
             convert()
             return false;
-        })();return false;">convert</button><br>
+        })();return false;">Get level Data</button><br>
+        <button onClick="(function(){
+            save()
+            window.open('game.html?host=true')
+            return false;
+        })();return false;">Open in game</button><br>DM me levels to add to game (reef#4029 on discrod)<br>
        <textarea name="" id="convert" cols="30" rows="10" style="width:200px;height:200px"></textarea>
     </body>
 </body>
