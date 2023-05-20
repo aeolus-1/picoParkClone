@@ -81,6 +81,10 @@
         <div id="host" style="display: none;">
             <div id="gameDetails">
                 <div id="gameCode">Code: <b id="roomCode">fetching</b><span id="incoming"></span></div>
+                <a id="copyLink" href="#" onclick="(function(){
+        navigator.clipboard.writeText(`https://aeolus-1.github.io/picoParkClone/game.html?join=${hostConnection.joinConn.selfId}`);
+        return false;
+    })();return false;">[Copy Link]</a>
             </div>
             <div id="memberList" style="border: solid black 1px; width:200px">
                 <h2>Members:</h2>
