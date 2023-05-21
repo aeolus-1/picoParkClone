@@ -249,8 +249,8 @@ function averageVertices() {
 
 function rotate(cx, cy, x, y, angle) {
     var radians = angle,
-        cos2 = cos(radians),
-        sin2 = sin(radians),
+        cos2 = Math.cos(radians),
+        sin2 = Math.sin(radians),
         nx = (cos2 * (x - cx)) + (sin2 * (y - cy)) + cx,
         ny = (cos2 * (y - cy)) - (sin2 * (x - cx)) + cy;
     return v(nx, ny);

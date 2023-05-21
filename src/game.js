@@ -10,6 +10,8 @@ class Game {
         this.buttons = []
         this.doors = []
         this.blocks = []
+        this.lasers = []
+
         this.triggers = []
 
         this.entities = []
@@ -18,6 +20,8 @@ class Game {
         this.triggerHandler = new TriggerHandler(this)
         this.playerhandler = new PlayerHandler(this)
         this.blockHandler = new BlockHandler(this)
+        this.laserHandler = new LaserHandler(this)
+
         this.levelHandler = new LevelHandler(this)
         this.renderer = new Renderer(this)
         this.constraintHandler = new ConstraintHandler(this)
@@ -32,12 +36,14 @@ class Game {
 
             self.playerhandler.updateControls()
             self.blockHandler.updateBlocks()
+            self.laserHandler.updateLasers()
 
             self.playerhandler.updatePlayers()
             
 
             self.constraintHandler.updateConstraints()
             self.triggerHandler.updateTriggers()
+            
             self.updateEntities()
 
 

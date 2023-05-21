@@ -9,6 +9,8 @@ var height = 10
 canvas.width = width*32
 canvas.height = height*32
 
+laserRotation = 1
+
 var grid = []
 var selected = "1"
 var mDown = false
@@ -44,9 +46,12 @@ setInterval(() => {
                 ctx.strokeStyle = "#fff"
 
             }  else if(grid[x][y] === "shrinkingButton") {
-                ctx.fillStyle = "#f0a"
+                ctx.fillStyle = "#f0e"
             } else if(grid[x][y] === "growingButton") {
-                ctx.fillStyle = "#f03"
+                ctx.fillStyle = "#f08"
+            }  else if(grid[x][y].split("|")[0] === "laser") {
+                ctx.fillStyle = "#f00"
+               
             } else if(grid[x][y] === "key") {
                
                 ctx.fillStyle = "#9c7c14"
@@ -60,6 +65,21 @@ setInterval(() => {
             let buffer = 10
             ctx.strokeRect((x*32)+buffer, (y*32)+buffer, (32*size.x)-(buffer*2), (32*size.y)-(buffer*2))
             
+        }
+    }
+    for(let x = 0; x < width; x++) {
+        for(let y = 0; y < height; y++) {
+            if(grid[x][y].split("|")[0] === "laser") {
+                ctx.fillStyle = "#f00"
+                ctx.beginPath()
+                let angle = (parseInt(grid[x][y].split("|")[1]))*Math.PI*0.5
+                    moveVector = v(100*Math.cos(angle),100*Math.sin(angle),)
+                ctx.moveTo(16+(x*32), 16+(y*32))
+                ctx.lineTo(moveVector.x+16+(x*32), moveVector.y+16+(y*32))
+                ctx.strokeStyle = "#f00"
+                ctx.stroke()
+                ctx.closePath()
+            } 
         }
     }
 
@@ -93,7 +113,14 @@ addEventListener("keydown", (e) => {
             let size = getCurrentBlockSize()
             selected += `|${size.x},${size.y},${size.min}`
         }
+        if (selected=="laser") {
+            selected += `|${laserRotation}`
+        }
         document.getElementById("selectedTile").innerHTML = "selected tile = "+LetterCode[e.key]
+    }
+    if (e.key == "r") {
+        laserRotation = (laserRotation%4)+1
+        document.getElementById("laserRotation").textContent = laserRotation
     }
     if(selected!=undefined) {console.log(selected)}
     if(e.key == "Shift") {fill = true; document.getElementById("filling").innerHTML = "filling = true"}
@@ -166,7 +193,8 @@ function convert() {
         doors = [],
         blocks = [],
         gButtons = [],
-        sButtons = []
+        sButtons = [],
+        lasers = []
     for(let r = 0; r < height; r++) {
         g.push(new Array())
         for(let t = 0; t < width; t++) {
@@ -189,11 +217,17 @@ function convert() {
                     break;
 
                 case "block":
-                    console.log(tile)
                     blocks.push({
                         pos:v(t,r),
                         size:v(parseInt(tile[1].split(",")[0]),parseInt(tile[1].split(",")[1])),
                         minPlayers:parseInt(tile[1].split(",")[2])
+                    })
+                    break;
+                case "laser":
+                    console.log(tile)
+                    lasers.push({
+                        pos:v(t,r),
+                        rotation:parseInt(tile[1])
                     })
                     break;
                 
@@ -253,6 +287,13 @@ function convert() {
             }
         }),`
     }).join(""))
+    
+    lasers = (lasers.map(k=>{
+        return `{
+            pos:v(${k.pos.x},${k.pos.y}),
+            angle:${k.rotation},
+        },`
+    }).join(""))
      
 
     
@@ -271,7 +312,7 @@ function convert() {
     }
 
 
-    var template = `"tempName":{playersBinded:${details.playersBinded},map:[${e}],buttons:[${details.buttons}],keys:[${details.keys}],blocks:[${details.blocks}],doors:[${details.doors}]},`
+    var template = `"tempName":{playersBinded:${details.playersBinded},map:[${e}],lasers:[${lasers}],buttons:[${details.buttons}],keys:[${details.keys}],blocks:[${details.blocks}],doors:[${details.doors}]},`
     console.log(template)
     document.getElementById("convert").value = btoa(template)
     return template
@@ -287,6 +328,7 @@ var LetterCode = {
     "s": "shrinkingButton",
     "g": "growingButton",
     "b": "block",
+    "l": "laser",
 }
 
 window.onload = ()=>{

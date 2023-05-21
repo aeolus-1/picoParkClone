@@ -156,6 +156,17 @@ class Renderer {
             this.ctx.closePath()
             this.ctx.restore()
         }
+        if (player.laserShield) {
+            this.ctx.save()
+            let laserShield = player.laserShield.position
+            this.ctx.translate(laserShield.x,laserShield.y)
+            this.ctx.rotate(player.options.hasShield*Math.PI*0.5)
+            this.ctx.translate(-laserShield.x,-laserShield.y)
+            this.ctx.fillRect(player.laserShield.position.x-5,player.laserShield.position.y-(75/2), 10,75)
+
+            this.ctx.restore()
+
+        }
 
     }
     renderConstraints() {
@@ -264,7 +275,7 @@ class Renderer {
             this.ctx.strokeStyle = "#f00"
             var bounds = trig.rect.bounds,
                     size = v(-(bounds.min.x-bounds.max.x),-(bounds.min.y-bounds.max.y))
-            this.ctx.strokeRect(bounds.min.x,bounds.min.y, size.x,size.y)
+            if (!trig.norender) this.ctx.strokeRect(bounds.min.x,bounds.min.y, size.x,size.y)
         }
     }
     renderLevel(levelHandler) {
@@ -307,6 +318,8 @@ class Renderer {
 
         this.renderButtons()
 
+        this.renderLasers()
+
         if(this.debug) {
             var bodies = Matter.Composite.allBodies(this.game.matter.engine.world)
             for (let i = 0; i < bodies.length; i++) {
@@ -321,6 +334,64 @@ class Renderer {
         }
 
 
+    }
+    renderLasers() {
+        for (let i = 0; i < this.game.lasers.length; i++) {
+            const laser = this.game.lasers[i];
+            let points = laser.cal()
+            this.renderLaser(points.start, points.end)
+        }
+    }
+    renderLaser(start, end) {
+        
+        var angle = -getAngle(start, end)-(Math.PI*0.5)
+            length = getDst(start, end)
+
+        var laser = {
+            startPos:start,
+            length:length+62,
+            angle:angle,
+        },
+            laserStart = {
+                origin:v(0,4),
+                size:v(36,92)
+            },
+            laserSeg = {
+                origin:v(57,0),
+                size:v(100,100)
+            },
+            laserEnd = {
+                origin:v(170,1),
+                size:v(64,99)
+            }
+
+            this.ctx.save()
+
+        this.ctx.translate(laser.startPos.x,laser.startPos.y)
+        this.ctx.rotate(angle)
+        this.ctx.scale(1, 0.5)
+        this.ctx.translate(-laser.startPos.x,-laser.startPos.y)
+
+        let segLength = laser.length-(laserStart.size.x)-(laserEnd.size.x)
+
+        let startCen = v(laserStart.size.x*0.5,laserStart.size.y*0.5)
+        this.ctx.drawImage(laserAtlas, 
+            laserStart.origin.x,laserStart.origin.y,laserStart.size.x,laserStart.size.y,
+            laser.startPos.x-(startCen.x),laser.startPos.y-(startCen.y), laserStart.size.x,laserStart.size.y
+            )
+        
+        let segCen = v(laserSeg.size.x*0.5,laserSeg.size.y*0.5)
+        this.ctx.drawImage(laserAtlas, 
+            laserSeg.origin.x,laserSeg.origin.y,laserSeg.size.x,laserSeg.size.y,
+            (laser.startPos.x+laserStart.size.x-startCen.x)-1.5,laser.startPos.y-segCen.y, segLength,laserSeg.size.y
+            )
+        let endCen = v(laserEnd.size.x*0.5,laserEnd.size.y*0.5)
+        this.ctx.drawImage(laserAtlas, 
+            laserEnd.origin.x,laserEnd.origin.y,laserEnd.size.x,laserEnd.size.y,
+            ((laser.startPos.x+laserStart.size.x-startCen.x)+segLength)-15,laser.startPos.y-endCen.y, laserEnd.size.x,laserEnd.size.y
+            )
+
+            this.ctx.restore()
     }
     renderEntities() {
         for (let i = 0; i < this.game.entities.length; i++) {

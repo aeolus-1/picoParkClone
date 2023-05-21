@@ -80,8 +80,10 @@ class Player {
             color:"red",
             controls:["arrowleft","arrowright","arrowup","arrowdown"],
             bodyOptions:{},
+            hasShield:3,
             ...options,
         }
+        this.options = options
         this.color = options.color
         this.colorTag = {
             "red":"#f00",
@@ -113,6 +115,8 @@ class Player {
 
         this.ready = false
 
+        
+
         this.frame = "idle"
         this.preFalling = false
         this.groundDetector = Matter.Bodies.circle(this.body.position.x,this.body.position.y+(spriteSize.x*0.5), spriteSize.x*0.25,{
@@ -128,6 +132,28 @@ class Player {
         this.groundDetector.player = this
         Matter.Body.scale(this.groundDetector, 1.45,0.5)
         
+    }
+    giveShield(angle) {
+        let axis = (angle%2)
+        this.laserShield = Matter.Bodies.rectangle(this.body.position.x,this.body.position.y, axis?65:10,(!axis)?65:10,{
+            noGravity:false,
+            collisionFilter:{
+                group:-1,
+                catagory:2,
+                mask:0,
+            },
+        })
+        this.laserShield.shield = true
+        this.laserShieldPos = rotate(0,0, -50,0,angle*Math.PI*0.5)
+        Matter.Composite.add(this.game.matter.engine.world, this.laserShield)
+    
+    }
+    removeShield() {
+        if (this.laserShield) {
+            Matter.Composite.remove(this.game.matter.engine.world, this.laserShield)
+            this.laserShield = undefined
+            this.laserShieldPos = undefined
+        }
     }
     readyUp() {
         this.ready = true
@@ -168,7 +194,7 @@ class Player {
 
     onGround() {
         
-        return Matter.Query.collides(this.groundDetector, Matter.Composite.allBodies(this.game.matter.engine.world).filter((a)=>{return a.id!=this.body.id&&a.id!=this.groundDetector.id})).length>0
+        return Matter.Query.collides(this.groundDetector, Matter.Composite.allBodies(this.game.matter.engine.world).filter((a)=>{return a.id!=this.body.id&&a.id!=this.groundDetector.id&&!a.shield})).length>0
     }
 
     moveHor(dir, multi=false) {
@@ -229,7 +255,8 @@ class Player {
         var ret = Matter.Query.collides(this.body, Matter.Composite.allBodies(this.game.matter.engine.world).filter((a)=>{
             return (
                 a.id!=this.body.id&&
-                ((a.isBlock)?!a.block.locked():true))
+                ((a.isBlock)?!a.block.locked():true))&&
+                !a.shield
         }))
         Matter.Body.scale(this.body, 1,2)
         
@@ -258,6 +285,10 @@ class Player {
 
         
         Matter.Body.setPosition(this.groundDetector, v(this.body.position.x,this.body.position.y+(spriteSize.y*0.5*this.scale)))
+        if (this.laserShield) {
+            Matter.Body.setPosition(this.laserShield, v(this.body.position.x+this.laserShieldPos.x,this.body.position.y+this.laserShieldPos.y))
+            Matter.Body.setVelocity(this.laserShield, v(0,0))
+        }
         Matter.Body.setVelocity(this.body, v(this.body.velocity.x*0,this.body.velocity.y))
 
         this.lastXPosition = this.body.position.x

@@ -20,6 +20,7 @@ class LevelHandler {
         this.game.triggers = []
         this.game.constraints = []
         this.game.blocks = []
+        this.game.lasers = []
 
         Matter.Composite.remove(this.game.matter.engine.world, this.levelComp)
         this.levelComp = Matter.Composite.create()
@@ -46,6 +47,16 @@ class LevelHandler {
 
         if (levelData.playersBinded) {
             this.game.bindPlayers(this.game.players)
+        }
+        for (let i = 0; i < this.game.players.length; i++) {
+            const player = this.game.players[i];
+            player.removeShield()
+        }
+        if (levelData.playersHaveShields) {
+            for (let i = 0; i < levelData.playersHaveShields.length; i++) {
+                const shield = levelData.playersHaveShields[i];
+                this.game.players[i].giveShield(shield)
+            }
         }
     
         this.game.renderer.offset = v(
@@ -104,6 +115,13 @@ class LevelHandler {
             this.game.doors.push(dor)
             dor.trigger.onIn = dor.onIn
             dor.playerCount = this.game.players.length
+
+        }
+        levelData.lasers = levelData.lasers||[]
+        for (let i = 0; i < levelData.lasers.length; i++) {
+            const boc = levelData.lasers[i];
+            let newLaser = new Laser(this.game, v(boc.pos.x*50,boc.pos.y*50), boc.angle,{})
+            this.game.lasers.push(newLaser)
 
         }
         for (let i = 0; i < levelData.blocks.length; i++) {
