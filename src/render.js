@@ -160,9 +160,13 @@ class Renderer {
             this.ctx.save()
             let laserShield = player.laserShield.position
             this.ctx.translate(laserShield.x,laserShield.y)
-            this.ctx.rotate(player.options.hasShield*Math.PI*0.5)
+            this.ctx.rotate((player.hasShield*Math.PI*0.5)%(Math.PI*2))
             this.ctx.translate(-laserShield.x,-laserShield.y)
-            this.ctx.fillRect(player.laserShield.position.x-5,player.laserShield.position.y-(75/2), 10,75)
+            this.ctx.drawImage(levelAtlas, 
+                108,1368,
+                30,222,
+                player.laserShield.position.x-5,player.laserShield.position.y-(75/2), 10,75
+                )
 
             this.ctx.restore()
 
@@ -348,7 +352,7 @@ class Renderer {
             length = getDst(start, end)
 
         var laser = {
-            startPos:start,
+            startPos:v(start.x,start.y),
             length:length+62,
             angle:angle,
         },

@@ -37,8 +37,9 @@ class PlayerHandler {
 
     }
     updatePlayer(player) {
-        player.updatePlayerParts()
         player.testFalling()
+        player.updatePlayerParts()
+
         
     }
     updatePlayerControls(player) {
@@ -144,6 +145,7 @@ class Player {
             },
         })
         this.laserShield.shield = true
+        this.hasShield = angle
         this.laserShieldPos = rotate(0,0, -50,0,angle*Math.PI*0.5)
         Matter.Composite.add(this.game.matter.engine.world, this.laserShield)
     

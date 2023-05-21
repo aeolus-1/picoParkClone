@@ -48,6 +48,12 @@ class Game {
 
 
         }
+        this.afterUpdateMobiles = function(self) {
+            for (let i = 0; i < self.players.length; i++) {
+                const player = self.players[i];
+                player.updatePlayerParts()
+            }
+        }
 
         this.currentColor = 0
         this.lastDelta = 0
@@ -69,6 +75,7 @@ class Game {
     initPhysics() {
         this.matter.init()
         Matter.Events.on(this.matter.engine, "beforeUpdate", ()=>{this.updateMobiles(this)})
+        Matter.Events.on(this.matter.engine, "afterUpdate", ()=>{this.afterUpdateMobiles(this)})
 
     }
 
