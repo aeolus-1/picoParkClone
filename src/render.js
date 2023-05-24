@@ -16,7 +16,7 @@ class Renderer {
         this.fadeValue = 1
         this.displayedTitle = ""
 
-        this.debug = false
+        this.debug = localfile
         window.onresize = ()=>{this.resizeCanvas()}
     }
     async levelTransistion(nextLevel) {

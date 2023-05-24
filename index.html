@@ -13,7 +13,7 @@
         return false;
     })();return false;">Create Room</button><br>
     Join Game <input id="codeinpt" type="text"><button onClick="(function(){
-        window.open(`./game.html?join=${getCode()}`,'_self')
+        window.open(`./game.html?join=${getCode().toUpperCase()}`,'_self')
         return false;
     })();return false;">Join</button>
 

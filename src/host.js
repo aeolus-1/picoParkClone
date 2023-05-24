@@ -2,8 +2,8 @@ class Host {
     constructor(game) {
         this.game = game
         this.connections = []
-
-        this.id = randChar()
+        let wordsf = words.filter(a=>{return a.length==4})
+        this.id = wordsf[randInt(0, wordsf.length)].toUpperCase()
         this.roomJoinOnline = false
         this.opening = true
     }
