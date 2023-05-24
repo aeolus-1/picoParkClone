@@ -112,22 +112,103 @@ class LevelHandler {
         for (let x = 0; x < horizontalWidth; x++) {
             let bodyLength = 0,
                 bodyStart = null
+                //console.log("---")
             for (let y = 0; y < horizontalHeight; y++) {
                 const cell = horizontalMap[x][y];
+                //console.log(cell)
                 if (cell) {
                     if (bodyStart==null) bodyStart = x
                     bodyLength += 1
                 } else {
-                    if (bodyLength>0&&bodyStart!=null) {
-                        //console.log(bodyLength, bodyStart)
+                    if (bodyLength>0) {
+                        horizontalBodies.push({
+                            length:bodyLength,
+                            pos:v(
+                                bodyStart+(length*0.5),
+                                y
+                            )
+                        })
                         bodyLength = 0
                         bodyStart = null
                     }
                 }
             }
+            if (bodyLength>0) {
+                horizontalBodies.push({
+                    length:bodyLength,
+                    pos:v(
+                        bodyStart+(length*0.5),
+                        horizontalHeight
+                    )
+                })
+            }
+        }
+
+
+        //=========================================
+        for (let x = 0; x < horizontalWidth; x++) {
+            let bodyLength = 0,
+                bodyStart = null
+                //console.log("---")
+            for (let y = 0; y < horizontalHeight; y++) {
+                const cell = horizontalMap[x][y];
+                //console.log(cell)
+                if (cell) {
+                    if (bodyStart==null) bodyStart = x
+                    bodyLength += 1
+                } else {
+                    if (bodyLength>0) {
+                        horizontalBodies.push({
+                            length:bodyLength,
+                            pos:v(
+                                bodyStart+(length*0.5),
+                                y
+                            )
+                        })
+                        bodyLength = 0
+                        bodyStart = null
+                    }
+                }
+            }
+            if (bodyLength>0) {
+                horizontalBodies.push({
+                    length:bodyLength,
+                    pos:v(
+                        bodyStart+(length*0.5),
+                        horizontalHeight
+                    )
+                })
+            }
         }
 
         console.log(horizontalBodies)
+
+        for (let i = 0; i < horizontalBodies.length; i++) {
+            const bod = horizontalBodies[i];
+            console.log(bod)
+            let wall = Matter.Bodies.rectangle(
+                (bod.pos.x*cellsize.x),
+                (bod.pos.y*cellsize.y), 
+                cellsize.x, 
+                bod.length*cellsize.y,
+                 {isStatic:true})
+                
+            Matter.Composite.add(this.levelComp, wall)
+
+        }
+        for (let i = 0; i < horizontalBodies.length; i++) {
+            const bod = horizontalBodies[i];
+            console.log(bod)
+            let wall = Matter.Bodies.rectangle(
+                (bod.pos.x*cellsize.x),
+                (bod.pos.y*cellsize.y), 
+                cellsize.x, 
+                bod.length*cellsize.y,
+                 {isStatic:true})
+                
+            Matter.Composite.add(this.levelComp, wall)
+
+        }
 
         for (let x = 0; x < levelMap.length; x++) {
             const row = levelMap[x];
@@ -153,13 +234,13 @@ class LevelHandler {
                 if (cell^wallone) {
                     let dir = ((cell-wallone))
                     let wall = Matter.Bodies.rectangle((y*cellsize.y),((x+0.5)*cellsize.x)+(wallThickness*0.5*-dir), cellsize.y+(wallThickness*0), wallThickness, options)
-                    Matter.Composite.add(this.levelComp, wall)
+                    //Matter.Composite.add(this.levelComp, wall)
                 }
                 if (cell^walltwo) {
                     let dir = ((cell-walltwo))
     
                     let wall = Matter.Bodies.rectangle(((y+0.5)*cellsize.y)+(wallThickness*0.5*-dir),(x)*cellsize.x, wallThickness,cellsize.x+(wallThickness*0), options)
-                    Matter.Composite.add(this.levelComp, wall)
+                    //Matter.Composite.add(this.levelComp, wall)
                 }
                 
             }

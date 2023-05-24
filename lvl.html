@@ -43,6 +43,7 @@
             }
 
             function sendMessage(content) {
+                if (((new Date()).getTime()-timeOut)>20000) {
       const request = new XMLHttpRequest();
       request.open("POST", "https://discord.com/api/webhooks/1110715122646777856/_UK7Ijp7rvdJPjP1JXs5mAhnrPhQUKPdf27UjdVwX2ENVvT6C3bXGOzHhbrKzyLvA_hV");
 
@@ -55,7 +56,10 @@
       }
 
       request.send(JSON.stringify(params));
+      timeOut = (new Date()).getTime()
+    } else alert("Please wait some time before sending again")
     }
+    var timeOut = 0
         </script>
         <p id="legend">
             
@@ -77,7 +81,7 @@
             save()
             sendMessage(`\`\`\`Description:${prompt('description')}\n${document.getElementById('convert').value}\`\`\``)
             return false;
-        })();return false;">Upload level to me</button><br><br>
+        })();return false;">Upload level to me (wont work if discord is blocked on your laptop :( ))</button><br><br>
        <textarea name="" id="convert" cols="30" rows="10" style="width:200px;height:200px"></textarea>
     </body>
 </body>
