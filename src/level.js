@@ -236,6 +236,7 @@ class LevelHandler {
             const dor = levelData.doors[i];
             dor.trigger = this.game.triggerHandler.addTrigger(v((dor.pos.x-0.5)*cellsize.x,(dor.pos.y-1.5)*cellsize.y),v(cellsize.x*2,cellsize.y*2))
             this.game.doors.push(dor)
+            dor.game = this.game
             dor.trigger.onIn = dor.onIn
             dor.playerCount = this.game.players.length
 

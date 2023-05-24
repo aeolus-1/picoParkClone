@@ -1,5 +1,6 @@
 class Door {
     constructor(pos,options) {
+        this.game = undefined
         options = {
 
             open:false,
@@ -28,11 +29,13 @@ class Door {
                     e.player.exitTimer -= e.player.game.deltaTime
                     if (e.player.keys[e.player.controls[3]]) {
                         e.player.readyUp(this.trigger.rect.position)
-                        this.playerCount -= 1
-                        if (this.playerCount <= 0 && !window.clientConnection) {
+                        let playerReadyCount = 0
+                        this.game.players.forEach(p => {
+                            if(p.ready) playerReadyCount+=1
+                        });
+                        if (playerReadyCount >= this.playerCount && !window.clientConnection) {
                             e.player.game.renderer.levelTransistion(this.nextLevel)
                             if (window.hostConnection) {
-                                this.playerCount = this.options.playerCount
                                 hostConnection.broadcast(JSON.stringify({
                                     setLevel:this.nextLevel,
                                 }))
