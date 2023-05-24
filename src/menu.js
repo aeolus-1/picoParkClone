@@ -2,6 +2,7 @@
 function startGame() {
     document.getElementById("c").style.display = ""
     document.getElementById("menu").style.display = "none"
+    document.getElementById("restartLevel").style.display = ""
     if (!mainGame.matter.running) {
         startMainGame()
     }

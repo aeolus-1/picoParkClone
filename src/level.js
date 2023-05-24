@@ -7,11 +7,12 @@ class LevelHandler {
         Matter.Composite.add(this.game.matter.engine.world, this.levelComp)
         
         this.currentLevel={}
+        
 
     }
     setLevel(name) {
         this.game.levelHandler.restartLevel()
-        this.game.levelHandler.loadLevel(levels[name])
+        this.game.levelHandler.loadLevel(levels[name], name)
     }
     restartLevel() {
         this.game.doors = []
@@ -31,7 +32,7 @@ class LevelHandler {
         Matter.Composite.add(this.game.matter.engine.world, this.game.blockHandler.comp)
         
     }
-    loadLevel(dat) {
+    loadLevel(dat, name) {
         var levelData = dat,
     
             cellsize = v(50,50),
@@ -40,6 +41,7 @@ class LevelHandler {
             let levelMap = levelData.map
             this.currentLevel.data = levelMap
             this.currentLevel.cellsize = cellsize
+            this.currentLevel.name = name
             this.game.buttons = levelData.buttons
 
         var width = levelMap[0].length*cellsize.x,

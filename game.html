@@ -46,7 +46,11 @@
 
     <canvas id="c" style="display: none;"></canvas>
     <div class="overlay">
-        <a href="./index.html">Back to Home</a>
+        <a href="./index.html">Back to Home</a> | 
+        <a style="display: none;" id="restartLevel" href="#"  onClick="(function(){
+            mainGame.levelHandler.setLevel(mainGame.levelHandler.currentLevel.name)
+            return false;
+        })();return false;">Restart Level</a>
     </div>
     <script src="./src/multiplayer.js"></script>
     <script src="./src/buttons.js"></script>

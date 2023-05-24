@@ -129,9 +129,9 @@ class Game {
         }) */
 
         if (this.runTemp) {
-            this.levelHandler.loadLevel(levels.tempLevel)
+            this.levelHandler.loadLevel(levels.tempLevel, "tempLevel")
         } else {
-            this.levelHandler.loadLevel(levels.one)
+            this.levelHandler.setLevel("one")
         }
 
         
