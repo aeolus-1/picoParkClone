@@ -148,6 +148,24 @@ var sprites = {
         ]
         
     },
+    "pushing":{
+        count:3,
+        speed:190,
+        frames:[
+            {
+                pos:v(30,190),
+                size:v(40,46),
+            },
+            {
+                pos:v(84,190),
+                size:v(40,46),
+            },
+            {
+                pos:v(133,190),
+                size:v(40,46),
+            },
+        ]
+    }
     
 },
     colorMods = {

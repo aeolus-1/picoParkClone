@@ -57,7 +57,7 @@ class LevelHandler {
         if (levelData.playersHaveShields) {
             for (let i = 0; i < levelData.playersHaveShields.length; i++) {
                 const shield = levelData.playersHaveShields[i];
-                this.game.players[i].giveShield(shield)
+                this.game.players[i%this.game.players.length].hasShield[shield] = true
             }
         }
     
@@ -70,7 +70,7 @@ class LevelHandler {
             player.restart(i)
         }
 
-        let levelThickness = 0.5
+        let levelThickness = 0.7
         var makeParts = (dir)=>{
 
             let horizontalMap = new Array(),
@@ -145,7 +145,7 @@ class LevelHandler {
                     })
                 }
             }
-            console.log(verticalMap)
+            console.log(horizontalBodies)
             //================================
             let verticalWidth = verticalMap.length,
                 verticalHeight = verticalMap[0].length
@@ -183,7 +183,7 @@ class LevelHandler {
                         length:bodyLength,
                         pos:v(
                             bodyStart,
-                            verticalHeight
+                            verticalHeight-1
                         )
                     })
                 }

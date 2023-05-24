@@ -59,7 +59,8 @@ class PlayerHandler {
             walking = true
         }
         if (walking) {
-            player.frame = "walking"
+            player.frame = !player.blockingDirection?"walking":"pushing"
+            
 
         } else if (player.onGround()) {
             player.frame = "idle"
@@ -116,6 +117,22 @@ class Player {
 
         this.ready = false
 
+        this.hasShield = {
+            1:false,
+            2:false,
+            3:false,
+            4:false,
+        }
+        this.preHasShield = {
+            1:false,
+            2:false,
+            3:false,
+            4:false,
+        }
+        this.laserShields = []
+
+        
+
         
 
         this.frame = "idle"
@@ -134,9 +151,24 @@ class Player {
         Matter.Body.scale(this.groundDetector, 1.45,0.5)
         
     }
+    testForShield() {
+        let a = [1,2,3,4]
+        for (let i = 0; i < a.length; i++) {
+            const num = a[i];
+            if (this.hasShield[num]&&!this.preHasShield[num]) {
+
+                this.giveShield(num)
+            } else if (this.preHasShield[num]&&!this.hasShield[num]) {
+                this.removeShield()
+            }
+        }
+
+        
+        this.preHasShield = {...this.hasShield}
+    }
     giveShield(angle) {
-        let axis = (angle%2)
-        this.laserShield = Matter.Bodies.rectangle(this.body.position.x,this.body.position.y, axis?65:10,(!axis)?65:10,{
+        let axis = (angle%2),
+            laserShield = Matter.Bodies.rectangle(this.body.position.x,this.body.position.y, axis?65:10,(!axis)?65:10,{
             noGravity:false,
             collisionFilter:{
                 group:-1,
@@ -144,17 +176,21 @@ class Player {
                 mask:0,
             },
         })
-        this.laserShield.shield = true
-        this.hasShield = angle
-        this.laserShieldPos = rotate(0,0, -50,0,angle*Math.PI*0.5)
-        Matter.Composite.add(this.game.matter.engine.world, this.laserShield)
+        laserShield.shield = true
+        laserShield.shieldAngle = angle
+        laserShield.laserShieldPos = rotate(0,0, -50,0,angle*Math.PI*0.5)
+        Matter.Composite.add(this.game.matter.engine.world, laserShield)
+        this.laserShields.push(laserShield)
     
     }
     removeShield() {
-        if (this.laserShield) {
-            Matter.Composite.remove(this.game.matter.engine.world, this.laserShield)
-            this.laserShield = undefined
-            this.laserShieldPos = undefined
+        if (this.laserShields.length>0) {
+            for (let i = 0; i < this.laserShields.length; i++) {
+                const sh = this.laserShields[i];
+                Matter.Composite.remove(this.game.matter.engine.world, sh)
+
+            }
+            this.laserShields = []
         }
     }
     readyUp(pos) {
@@ -187,10 +223,16 @@ class Player {
         this.keys = {...keys}
     }
     testFalling() {
-        if (this.body.position.y>=window.innerHeight*3) Matter.Body.setPosition(this.body, v(
+        if (this.body.position.y>=window.innerHeight*3) {
+            Matter.Body.setPosition(this.body, v(
             100,
-            -this.game.renderer.offset.y-20,
+            -60,
             ))
+            Matter.Body.setVelocity(this.body, v(
+                this.body.velocity.x*0.3,
+                this.body.velocity.y*0.3,
+            ))
+        }
        
             
 
@@ -221,7 +263,6 @@ class Player {
             for (let i = 0; i < playersOnTop.length; i++) {
                 var bodyIs = (playersOnTop[i].bodyA.label!="Rectangle Body")?"bodyA":"bodyB"
                 var player = playersOnTop[i][bodyIs].player;
-                //player.frame = "walking"
                 player.moveHor(dir, true)
                 //player.moveHor(dir*diff)
             }
@@ -297,11 +338,17 @@ class Player {
         ))
         this.constraintVel.x *= Math.pow(0.98, this.game.deltaTime)
 
+        this.testForShield()
+
         
         Matter.Body.setPosition(this.groundDetector, v(this.body.position.x,this.body.position.y+(spriteSize.y*0.5*this.scale)))
-        if (this.laserShield) {
-            Matter.Body.setPosition(this.laserShield, v(this.body.position.x+this.laserShieldPos.x,this.body.position.y+this.laserShieldPos.y))
-            Matter.Body.setVelocity(this.laserShield, v(0,0))
+        if (this.laserShields.length>0) {
+            for (let i = 0; i < this.laserShields.length; i++) {
+                const sh = this.laserShields[i];
+                Matter.Body.setPosition(sh, v(this.body.position.x+sh.laserShieldPos.x,this.body.position.y+sh.laserShieldPos.y))
+                Matter.Body.setVelocity(sh, v(0,0))
+            }
+            
         }
         Matter.Body.setVelocity(this.body, v(this.body.velocity.x*0,this.body.velocity.y))
 

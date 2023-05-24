@@ -299,12 +299,21 @@ function convert() {
     
 
     var details = {
-        playersBinded:0,
+        playersBinded:new Boolean(document.getElementById("playersBinded").checked),
         map:e,
 
         buttons:gButtons+sButtons,
 
         keys:keys,
+
+        playerShields:(()=>{
+            let shields = "["
+            if (document.getElementById("sT").checked) shields += "3,"
+            if (document.getElementById("sB").checked) shields += "1,"
+            if (document.getElementById("sL").checked) shields += "2,"
+            if (document.getElementById("sR").checked) shields += "4,"
+            return shields+"]"
+        })(),
 
         blocks:blocks,
 
@@ -312,7 +321,7 @@ function convert() {
     }
 
 
-    var template = `"tempName":{playersBinded:${details.playersBinded},map:[${e}],lasers:[${lasers}],buttons:[${details.buttons}],keys:[${details.keys}],blocks:[${details.blocks}],doors:[${details.doors}]},`
+    var template = `"tempName":{playersHaveShields:${details.playerShields},playersBinded:${details.playersBinded},map:[${e}],lasers:[${lasers}],buttons:[${details.buttons}],keys:[${details.keys}],blocks:[${details.blocks}],doors:[${details.doors}]},`
     console.log(template)
     document.getElementById("convert").value = btoa(template)
     return template

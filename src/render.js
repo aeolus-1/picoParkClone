@@ -156,19 +156,23 @@ class Renderer {
             this.ctx.closePath()
             this.ctx.restore()
         }
-        if (player.laserShield) {
-            this.ctx.save()
-            let laserShield = player.laserShield.position
-            this.ctx.translate(laserShield.x,laserShield.y)
-            this.ctx.rotate((player.hasShield*Math.PI*0.5)%(Math.PI*2))
-            this.ctx.translate(-laserShield.x,-laserShield.y)
-            this.ctx.drawImage(levelAtlas, 
-                108,1368,
-                30,222,
-                player.laserShield.position.x-5,player.laserShield.position.y-(75/2), 10,75
-                )
+        if (player.laserShields.length>0) {
+            for (let i = 0; i < player.laserShields.length; i++) {
+                const sh = player.laserShields[i];
+                this.ctx.save()
+                let laserShield = sh.position
+                this.ctx.translate(laserShield.x,laserShield.y)
+                this.ctx.rotate((sh.shieldAngle*Math.PI*0.5)%(Math.PI*2))
+                this.ctx.translate(-laserShield.x,-laserShield.y)
+                this.ctx.drawImage(levelAtlas, 
+                    108,1368,
+                    30,222,
+                    sh.position.x-5,sh.position.y-(75/2), 10,75
+                    )
 
-            this.ctx.restore()
+                this.ctx.restore()
+            }
+            
 
         }
 
