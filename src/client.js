@@ -22,6 +22,7 @@ class Client {
 
     processData(d,rd) {
         d = JSON.parse(d)
+        let msgPing = rd.ping
         if (true) {
             if (d.reconnectToThis) {
                 this.mainConn = new Connection2W()

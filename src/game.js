@@ -27,6 +27,7 @@ class Game {
         this.constraintHandler = new ConstraintHandler(this)
 
         this.entityHandler = new EntityHandler(this)
+        this.particleHandler = new ParticleHandler(this)
 
         
 

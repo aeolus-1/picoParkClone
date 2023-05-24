@@ -67,6 +67,68 @@ class LevelHandler {
             const player = this.game.players[i];
             player.restart(i)
         }
+
+
+
+
+        let horizontalMap = new Array(),
+            horizontalMapWidth = levelMap[0].length,
+            horizontalMapHeight = levelMap.length
+        
+        
+        for (let y = 1; y < horizontalMapWidth; y++) {
+            horizontalMap[y-1] = new Array()
+            for (let x = 0; x < horizontalMapHeight; x++) {
+                horizontalMap[y-1][x] = levelMap[x][y-1]^levelMap[x][y]
+            }
+        }
+
+
+        let verticalMap = new Array(),
+        verticalMapWidth = levelMap[0].length,
+        verticalMapHeight = levelMap.length
+        
+        
+        for (let x = 0; x < verticalMapWidth; x++) {
+            verticalMap[x] = new Array()
+
+            for (let y = 1; y < verticalMapHeight; y++) {
+
+                //console.log(x,y)
+                verticalMap[x][y-1] = levelMap[y][x]^levelMap[y-1][x]
+            }
+        }
+
+
+
+
+
+        let verticalBodies = [],
+            horizontalBodies = [],
+
+            horizontalWidth = horizontalMap.length,
+            horizontalHeight = horizontalMap[0].length
+        
+        for (let x = 0; x < horizontalWidth; x++) {
+            let bodyLength = 0,
+                bodyStart = null
+            for (let y = 0; y < horizontalHeight; y++) {
+                const cell = horizontalMap[x][y];
+                if (cell) {
+                    if (bodyStart==null) bodyStart = x
+                    bodyLength += 1
+                } else {
+                    if (bodyLength>0&&bodyStart!=null) {
+                        //console.log(bodyLength, bodyStart)
+                        bodyLength = 0
+                        bodyStart = null
+                    }
+                }
+            }
+        }
+
+        console.log(horizontalBodies)
+
         for (let x = 0; x < levelMap.length; x++) {
             const row = levelMap[x];
             for (let y = 0; y < row.length; y++) {

@@ -322,6 +322,7 @@ class Renderer {
 
         this.renderButtons()
 
+        this.renderParticles()
         this.renderLasers()
 
         if(this.debug) {
@@ -338,6 +339,14 @@ class Renderer {
         }
 
 
+    }
+    renderParticles() {
+        let parts = this.game.particleHandler.particles
+        for (let i = 0; i < parts.length; i++) {
+            const part = parts[i];
+            let image = part.image
+            this.ctx.drawImage(image.img, image.pos.x,image.pos.y,image.size.x,image.size.y,part.body.position.x-15,part.body.position.y-15, 30,30)
+        }
     }
     renderLasers() {
         for (let i = 0; i < this.game.lasers.length; i++) {
