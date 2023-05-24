@@ -56,7 +56,7 @@ class Game {
             }
         }
 
-        this.currentColor = 0
+        this.currentColor = randInt(0,7)
         this.lastDelta = 0
         this.deltaTime = 0
     }

@@ -66,7 +66,7 @@ class PlayerHandler {
         } else {
             player.frame = "falling"
         }
-        if (keys[c[2]]&&player.onGround()) player.jump()
+        if (keys[c[2]]) player.jump()
         
 
     }
@@ -78,7 +78,7 @@ class Player {
     constructor(game, options) {
         this.game = game
         options = {
-            color:"red",
+            color:this.game.fetchColor(),
             controls:["arrowleft","arrowright","arrowup","arrowdown"],
             bodyOptions:{},
             hasShield:3,
@@ -157,13 +157,23 @@ class Player {
             this.laserShieldPos = undefined
         }
     }
-    readyUp() {
+    readyUp(pos) {
         this.ready = true
+        this.unreadyPos = pos
+        this.body.isStatic = true
         Matter.Body.setPosition(this.body, v(-1000,-100000000))
+    }
+    unReady() {
+        Matter.Body.setPosition(this.body, v(this.unreadyPos.x,this.unreadyPos.y))
+        this.body.isStatic = false
+        this.ready = false
+
     }
     restart(i=0) {
         this.ready = false
         this.exitTimer = 60
+        this.body.isStatic = false
+
         Matter.Body.setPosition(this.body, v(
             100,
             -this.game.renderer.offset.y+-20+(-i*50),
@@ -267,7 +277,9 @@ class Player {
         return ret.length>0
     }
     jump() {
-        Matter.Body.setVelocity(this.body, v(this.body.velocity.x,-13))
+        if (this.ready) {
+            this.unReady()
+        } else if (this.onGround()) Matter.Body.setVelocity(this.body, v(this.body.velocity.x,-13))
         //this.updatePlayerParts()
     }
 

@@ -7,6 +7,7 @@ class Door {
 
 
         }
+        this.options = options
         this.pos = pos
 
         this.nextLevel = options.nextLevel
@@ -25,21 +26,22 @@ class Door {
                     rect.min.y<playerBody.min.y && (rect.max.y+5)>playerBody.max.y 
                 ) {
                     e.player.exitTimer -= e.player.game.deltaTime
-                    if (e.player.exitTimer<=0) {
-                        e.player.readyUp()
+                    if (e.player.keys[e.player.controls[3]]) {
+                        e.player.readyUp(this.trigger.rect.position)
                         this.playerCount -= 1
                         if (this.playerCount <= 0 && !window.clientConnection) {
                             e.player.game.renderer.levelTransistion(this.nextLevel)
                             if (window.hostConnection) {
+                                this.playerCount = this.options.playerCount
                                 hostConnection.broadcast(JSON.stringify({
                                     setLevel:this.nextLevel,
                                 }))
                             }
-
+    
                         }
                     }
-                } else {
-                    e.player.exitTimer = 60
+
+                    
                 }
                 
             }
