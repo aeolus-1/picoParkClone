@@ -123,6 +123,7 @@ class LevelHandler {
                         bodyLength += 1
                     } else {
                         if (bodyLength>0) {
+                            console.log(bodyStart,y)
                             horizontalBodies.push({
                                 length:bodyLength,
                                 pos:v(
@@ -140,7 +141,7 @@ class LevelHandler {
                         length:bodyLength,
                         pos:v(
                             bodyStart,
-                            horizontalHeight-1
+                            horizontalHeight
                         )
                     })
                 }
@@ -164,7 +165,6 @@ class LevelHandler {
                         bodyLength += 1
                     } else {
                         if (bodyLength>0) {
-                            console.log(bodyLength, bodyStart, y)
                             verticalBodies.push({
                                 length:bodyLength,
                                 pos:v(
@@ -182,7 +182,7 @@ class LevelHandler {
                         length:bodyLength,
                         pos:v(
                             bodyStart,
-                            verticalHeight-1
+                            0
                         )
                     })
                 }
@@ -192,7 +192,6 @@ class LevelHandler {
 
             for (let i = 0; i < horizontalBodies.length; i++) {
                 const bod = horizontalBodies[i];
-                console.log(bod)
                 let wall = Matter.Bodies.rectangle(
                     ((bod.pos.x+((1-levelThickness)*0.5)-(levelThickness*Math.min(dir,0)))*cellsize.x),
                     ((bod.pos.y-(bod.length*0.5)-0.5)*cellsize.y), 
@@ -206,7 +205,6 @@ class LevelHandler {
             
             for (let i = 0; i < verticalBodies.length; i++) {
                 const bod = verticalBodies[i];
-                console.log(bod)
                 let wall = Matter.Bodies.rectangle(
                     ((bod.pos.x+(bod.length*0.5)-0.5)*cellsize.x), 
                     ((bod.pos.y+1-((1-levelThickness)*0.5)+(levelThickness*Math.min(-dir,0)))*cellsize.y),
