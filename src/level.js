@@ -54,7 +54,7 @@ class LevelHandler {
             const player = this.game.players[i];
             player.removeShield()
         }
-        if (levelData.playersHaveShields&&window.hostConnection) {
+        if (levelData.playersHaveShields&&!window.clientConnection) {
             for (let i = 0; i < levelData.playersHaveShields.length; i++) {
                 const shield = levelData.playersHaveShields[i];
                 this.game.players[i%this.game.players.length].hasShield[shield] = true
@@ -140,7 +140,7 @@ class LevelHandler {
                         length:bodyLength,
                         pos:v(
                             bodyStart,
-                            horizontalHeight
+                            horizontalHeight-1
                         )
                     })
                 }
@@ -178,7 +178,6 @@ class LevelHandler {
                     }
                 }
                 if (bodyLength>0) {
-                    console.log(bodyLength, bodyStart, verticalHeight)
                     verticalBodies.push({
                         length:bodyLength,
                         pos:v(
