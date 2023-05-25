@@ -304,7 +304,6 @@ class Player {
     }
     testPlayerCollision() {
         Matter.Body.scale(this.body, 1,0.5)
-        let onground = this.onGround()
         var ret = Matter.Query.collides(this.body, Matter.Composite.allBodies(this.game.matter.engine.world).filter((a)=>{
             return (
                 a.id!=this.body.id&&
