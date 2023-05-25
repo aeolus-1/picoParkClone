@@ -220,6 +220,19 @@ class Renderer {
             
         }
     }
+    renderJumppads() {
+        for (let i = 0; i < this.game.jumppads.length; i++) {
+            const jp = this.game.jumppads[i];
+            let pos = jp.pos,
+                cellsize = v(50,50)
+            this.ctx.fillStyle = "#f50"
+            let heightDiff = (
+                Math.sin(((new Date()).getTime()/50))*25
+            )
+            this.ctx.fillRect(((pos.x-0.5)*cellsize.x),((pos.y-0.5)*cellsize.y)-heightDiff,cellsize.x,cellsize.y+heightDiff)
+            
+        }
+    }
     renderBlocks() {
         for (let i = 0; i < this.game.blocks.length; i++) {
             const boc = this.game.blocks[i];
@@ -327,6 +340,8 @@ class Renderer {
         this.renderBlocks()
 
         this.renderButtons()
+
+        this.renderJumppads()
 
         this.renderParticles()
         this.renderLasers()

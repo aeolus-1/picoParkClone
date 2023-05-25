@@ -11,6 +11,7 @@ class Game {
         this.doors = []
         this.blocks = []
         this.lasers = []
+        this.jumppads = []
 
         this.triggers = []
 
@@ -21,6 +22,7 @@ class Game {
         this.playerhandler = new PlayerHandler(this)
         this.blockHandler = new BlockHandler(this)
         this.laserHandler = new LaserHandler(this)
+        this.jumppadHandler = new JumppadHandler(this)
 
         this.levelHandler = new LevelHandler(this)
         this.renderer = new Renderer(this)
@@ -38,6 +40,7 @@ class Game {
             self.playerhandler.updateControls()
             self.blockHandler.updateBlocks()
             self.laserHandler.updateLasers()
+            self.jumppadHandler.updateJumppads()
 
             self.playerhandler.updatePlayers()
             

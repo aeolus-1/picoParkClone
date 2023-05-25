@@ -238,7 +238,17 @@ class Player {
             ))
         }
        
-            
+        let ground = this.getGround()
+       if (ground!=undefined) {
+
+           if (ground.bodyA.jumppad||ground.bodyB.jumppad) {
+               this.jump(2)
+           }
+
+       }
+
+        
+        
 
         var falling = !this.onGround()
         if (falling) {
@@ -253,6 +263,9 @@ class Player {
     onGround() {
         
         return Matter.Query.collides(this.groundDetector, Matter.Composite.allBodies(this.game.matter.engine.world).filter((a)=>{return a.id!=this.body.id&&a.id!=this.groundDetector.id&&!a.shield})).length>0
+    }
+    getGround() {
+        return Matter.Query.collides(this.groundDetector, Matter.Composite.allBodies(this.game.matter.engine.world).filter((a)=>{return a.id!=this.body.id&&a.id!=this.groundDetector.id&&!a.shield}))[0]
     }
 
     moveHor(dir, multi=false) {
@@ -320,10 +333,10 @@ class Player {
         
         return ret.length>0
     }
-    jump() {
+    jump(str=1) {
         if (this.ready) {
             this.unReady()
-        } else if (this.onGround()) Matter.Body.setVelocity(this.body, v(this.body.velocity.x,-13))
+        } else if (this.onGround()) Matter.Body.setVelocity(this.body, v(this.body.velocity.x,-13*str))
         //this.updatePlayerParts()
     }
 

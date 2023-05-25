@@ -250,6 +250,12 @@ class LevelHandler {
             this.game.blockHandler.addBlock(v(boc.pos.x*50,boc.pos.y*50), boc.size, boc)
 
         }
+        for (let i = 0; i < levelData.jumppads.length; i++) {
+            const jp = levelData.jumppads[i];
+            let newJp = new Jumppad(this.game, v(jp.x,jp.y-2), {})
+            this.game.jumppads.push(newJp)
+
+        }
         for (let i = 0; i < levelData.keys.length; i++) {
             const key = levelData.keys[i];
             var newKey = new Key(this.game, v(key.x*cellsize.x,key.y*cellsize.y), {})

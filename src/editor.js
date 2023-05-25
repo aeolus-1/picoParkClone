@@ -45,6 +45,8 @@ setInterval(() => {
                 ctx.fillStyle = "#6e3516"
                 ctx.strokeStyle = "#fff"
 
+            }  else if(grid[x][y] === "jumppad") {
+                ctx.fillStyle = "#5f0"
             }  else if(grid[x][y] === "shrinkingButton") {
                 ctx.fillStyle = "#f0e"
             } else if(grid[x][y] === "growingButton") {
@@ -194,7 +196,8 @@ function convert() {
         blocks = [],
         gButtons = [],
         sButtons = [],
-        lasers = []
+        lasers = [],
+        jumppads = []
     for(let r = 0; r < height; r++) {
         g.push(new Array())
         for(let t = 0; t < width; t++) {
@@ -203,6 +206,9 @@ function convert() {
             switch (tile[0]) {
                 case "door":
                     doors.push(v(t+1,r+2))
+                    break;
+                case "jumppad":
+                    jumppads.push(v(t,r+2))
                     break;
             
                 case "key":
@@ -246,7 +252,10 @@ function convert() {
         if(r!=height-1)e += `],`
         else e += `]`
     }
-    
+    jumppads = (jumppads.map(k=>{
+        return `
+            v(${k.x},${k.y}),`
+    }).join(""))
     keys = (keys.map(k=>{
         return `
             v(${k.x},${k.y}),`
@@ -321,7 +330,7 @@ function convert() {
     }
 
 
-    var template = `"tempName":{playersHaveShields:${details.playerShields},playersBinded:${details.playersBinded},map:[${e}],lasers:[${lasers}],buttons:[${details.buttons}],keys:[${details.keys}],blocks:[${details.blocks}],doors:[${details.doors}]},`
+    var template = `"tempName":{jumppads:[${jumppads}],playersHaveShields:${details.playerShields},playersBinded:${details.playersBinded},map:[${e}],lasers:[${lasers}],buttons:[${details.buttons}],keys:[${details.keys}],blocks:[${details.blocks}],doors:[${details.doors}]},`
     console.log(template)
     document.getElementById("convert").value = btoa(template)
     return template
@@ -336,6 +345,7 @@ var LetterCode = {
     "k": "key",
     "s": "shrinkingButton",
     "g": "growingButton",
+    "j": "jumppad",
     "b": "block",
     "l": "laser",
 }
