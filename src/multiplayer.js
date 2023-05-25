@@ -283,6 +283,7 @@ function parsePlayerData(player) {
     frame:player.frame,
     color:player.color,
     scale:player.scale,
+    ready:player.ready,
   }
 }
 
@@ -295,6 +296,7 @@ function setPlayerWithData(player,data,updatePhysics=true) {
   player.updateKeys(data.keys)
   player.color = data.color
   player.frame = data.frame
+  player.ready = data.ready
   player.setScale(data.scale)
 
 }
