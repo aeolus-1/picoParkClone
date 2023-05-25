@@ -12,10 +12,33 @@
         window.open('./game.html?host=true','_self')
         return false;
     })();return false;">Create Room</button><br>
-    Join Game <input id="codeinpt" type="text"><button onClick="(function(){
+    <hr>
+    <b>Join Room</b><br>
+    Username <input id="usernameInpt" onchange="(function(){
+        localStorage.setItem('username', document.getElementById('usernameInpt').value)
+        return false;
+    })();return false;" type="text"><br>
+    <script>
+        let name = localStorage.getItem("username")
+        name = name||""
+        document.getElementById("usernameInpt").value = name
+    </script>
+    Room Code <input id="codeinpt" type="text"><button onClick="(function(){
         window.open(`./game.html?join=${getCode().toUpperCase()}`,'_self')
         return false;
-    })();return false;">Join</button>
+    })();return false;" id="joinButton">Join</button>
+    <script>
+        let input = document.getElementById("codeinpt")
+        input.addEventListener("keypress", function(event) {
+  // If the user presses the "Enter" key on the keyboard
+  if (event.key === "Enter") {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Trigger the button element with a click
+    document.getElementById("joinButton").click();
+  }
+});
+    </script>
 
     <br><br><a href="./lvl.html">[Level Editor]</a>
 

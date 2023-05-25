@@ -9,7 +9,9 @@ class Client {
 
         this.recentPing = 0
 
-        this.username = prompt("username?")
+        let name = localStorage.getItem("username")
+        name = name||"unnamed"
+        this.username = name
     }
     init(roomId) {
         this.roomConn = new Connection2W()
