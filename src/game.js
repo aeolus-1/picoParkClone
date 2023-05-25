@@ -131,7 +131,7 @@ class Game {
         if (this.runTemp) {
             this.levelHandler.loadLevel(levels.tempLevel, "tempLevel")
         } else {
-            this.levelHandler.setLevel("six")
+            this.levelHandler.setLevel("one")
         }
 
         

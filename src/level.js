@@ -62,8 +62,8 @@ class LevelHandler {
         }
     
         this.game.renderer.offset = v(
-            (cellsize.x*0.5)+(-width*0.5)+(window.innerWidth*0.5),
-            (cellsize.y*0.5)+(-height*0.5)+(window.innerHeight*0.5),
+            (cellsize.x*0.5)+(-width*0.5),
+            (cellsize.y*0.5)+(-height*0.5),
         )
         for (let i = 0; i < this.game.players.length; i++) {
             const player = this.game.players[i];
@@ -182,7 +182,7 @@ class LevelHandler {
                         length:bodyLength,
                         pos:v(
                             bodyStart,
-                            0
+                            y
                         )
                     })
                 }

@@ -88,7 +88,7 @@ class Renderer {
         self.clearCanvas()
         self.renderBackground()
         self.ctx.save()
-        self.ctx.translate(self.offset.x,self.offset.y)
+        self.ctx.translate(self.offset.x+(window.innerWidth*0.5),self.offset.y+(window.innerHeight*0.5))
 
         self.renderLevel(self.game.levelHandler)
         self.renderConstraints()
