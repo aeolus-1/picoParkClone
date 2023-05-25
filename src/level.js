@@ -54,7 +54,7 @@ class LevelHandler {
             const player = this.game.players[i];
             player.removeShield()
         }
-        if (levelData.playersHaveShields) {
+        if (levelData.playersHaveShields&&window.hostConnection) {
             for (let i = 0; i < levelData.playersHaveShields.length; i++) {
                 const shield = levelData.playersHaveShields[i];
                 this.game.players[i%this.game.players.length].hasShield[shield] = true

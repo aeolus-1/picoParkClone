@@ -159,7 +159,11 @@ class Player {
 
                 this.giveShield(num)
             } else if (this.preHasShield[num]&&!this.hasShield[num]) {
-                this.removeShield()
+                console.log(this.laserShields)
+                if (this.laserShields[num]!=undefined) {
+                    Matter.Composite.remove(this.game.matter.engine.world,this.laserShields[num])
+                    this.laserShields[num] = undefined
+                }
             }
         }
 
@@ -180,18 +184,18 @@ class Player {
         laserShield.shieldAngle = angle
         laserShield.laserShieldPos = rotate(0,0, -50,0,angle*Math.PI*0.5)
         Matter.Composite.add(this.game.matter.engine.world, laserShield)
-        this.laserShields.push(laserShield)
+        this.laserShields[angle] =(laserShield)
+        console.log(this.laserShields)
     
     }
     removeShield() {
-        if (this.laserShields.length>0) {
-            for (let i = 0; i < this.laserShields.length; i++) {
-                const sh = this.laserShields[i];
-                Matter.Composite.remove(this.game.matter.engine.world, sh)
-
-            }
-            this.laserShields = []
+        this.hasShield = {
+            1:false,
+            2:false,
+            3:false,
+            4:false,
         }
+        
     }
     readyUp(pos) {
         this.ready = true
@@ -344,8 +348,11 @@ class Player {
         if (this.laserShields.length>0) {
             for (let i = 0; i < this.laserShields.length; i++) {
                 const sh = this.laserShields[i];
-                Matter.Body.setPosition(sh, v(this.body.position.x+sh.laserShieldPos.x,this.body.position.y+sh.laserShieldPos.y))
-                Matter.Body.setVelocity(sh, v(0,0))
+                //console.log(sh)
+                if (sh!=undefined) {
+                    Matter.Body.setPosition(sh, v(this.body.position.x+sh.laserShieldPos.x,this.body.position.y+sh.laserShieldPos.y))
+                    Matter.Body.setVelocity(sh, v(0,0))
+                }
             }
             
         }

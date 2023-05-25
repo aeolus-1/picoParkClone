@@ -159,6 +159,7 @@ class Renderer {
         if (player.laserShields.length>0) {
             for (let i = 0; i < player.laserShields.length; i++) {
                 const sh = player.laserShields[i];
+                if (sh!=undefined) {
                 this.ctx.save()
                 let laserShield = sh.position
                 this.ctx.translate(laserShield.x,laserShield.y)
@@ -171,6 +172,7 @@ class Renderer {
                     )
 
                 this.ctx.restore()
+                }
             }
             
 
