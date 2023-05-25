@@ -294,7 +294,7 @@ function setPlayerWithData(player,data,updatePhysics=true) {
     Matter.Body.setPosition(player.body, data.position)
     player.direction = data.direction
   }
-  player.updateKeys(data.keys)
+  if (!window.hostConnection) player.updateKeys(data.keys)
   player.color = data.color
   player.frame = data.frame
   player.ready = data.ready

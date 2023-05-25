@@ -51,6 +51,14 @@ class Client {
             }
         }
     }
+    updateKey(keycode, value) {
+        this.mainConn.send(JSON.stringify({
+            keycode:{
+                code:keycode,
+                value:value,
+            }
+        }))
+    }
     updateHost() {
         if (this.mainConn !=undefined&&this.mainConn.fullyConnected) this.mainConn.send(JSON.stringify({
             player:parsePlayerData(this.mainPlayer)
