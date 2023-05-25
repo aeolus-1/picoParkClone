@@ -89,7 +89,7 @@
         })();return false;">Open in game</button><br><br>
         <button onClick="(function(){
             save()
-            sendMessage(`\`\`\`Description:${prompt('description')}\n${document.getElementById('convert').value}\`\`\``)
+            sendMessage(`\`\`\`Description:${prompt('description')}\n${atob(document.getElementById('convert').value)}\`\`\``)
             return false;
         })();return false;">Upload level to me</button><br><br>
        <textarea name="" id="convert" cols="30" rows="10" style="width:200px;height:200px"></textarea>
