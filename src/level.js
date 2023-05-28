@@ -20,6 +20,8 @@ class LevelHandler {
         this.game.button = []
         this.game.triggers = []
         this.game.constraints = []
+        this.playersBinded = false
+
         this.game.blocks = []
         this.game.lasers = []
         this.game.jumppads = []
@@ -35,6 +37,10 @@ class LevelHandler {
         Matter.Composite.remove(this.game.matter.engine.world, this.game.blockHandler.comp)
         this.game.blockHandler.comp = Matter.Composite.create()
         Matter.Composite.add(this.game.matter.engine.world, this.game.blockHandler.comp)
+
+        if (window.hostConnection) {
+            window.hostConnection.broadcast(JSON.stringify({restartLevel:true}))
+        }
         
     }
     loadLevel(dat, name) {

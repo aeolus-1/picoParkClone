@@ -7,6 +7,7 @@ class Game {
         this.mobile = []
         this.players = []
         this.constraints = []
+        this.playersBinded = false
         this.buttons = []
         this.doors = []
         this.blocks = []
@@ -134,7 +135,7 @@ class Game {
         if (this.runTemp) {
             this.levelHandler.loadLevel(levels.tempLevel, "tempLevel")
         } else {
-            this.levelHandler.setLevel("sixteen")
+            this.levelHandler.setLevel("one")
         }
 
         
@@ -152,6 +153,7 @@ class Game {
                 bodyA:players[i+1],
             })
         }
+        this.playersBinded = true
         
                 
     }

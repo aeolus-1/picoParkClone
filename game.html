@@ -136,7 +136,10 @@
 
             window.hostConnection;window.clientConnection
             if (urlData.host) {hostConnection = new Host(mainGame);hostConnection.init()}
-            if (urlData.join) {clientConnection = new Client(mainGame,player1);clientConnection.init(urlData.join)}
+            if (urlData.join) {
+                clientConnection = new Client(mainGame,player1);clientConnection.init(urlData.join)
+                document.getElementById("restartLevel").style.display = "none"
+            }
             if (!urlData.host&&!urlData.join) startGame()
 
 
@@ -176,6 +179,7 @@
                 let levelString = `({${atob(tempLevel)}})`
                 document.getElementById("gameCode").innerHTML = "-- temp level loaded --"
                 document.getElementById("title").textContent = "temp-level"
+                document.getElementById("copyLink").style.display = "none"
                 levels.tempLevel = eval(levelString)["tempName"]
                 mainGame.runTemp = true
                 localStorage.removeItem("tempLevel")

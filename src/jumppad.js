@@ -5,11 +5,12 @@ class JumppadHandler {
         Matter.Composite.add(this.game.matter.engine.world, this.comp)
     }
     updateJumppads() {
-        let height = (
-            Math.sin(((new Date()).getTime()/50))*25
-        )
+        
         for (let i = 0; i < this.game.jumppads.length; i++) {
             const jp = this.game.jumppads[i];
+            let height = (
+                Math.sin((((new Date()).getTime()+jp.id)/50))*25
+            )
             jp.setHeight(height)
         }
     }
@@ -22,6 +23,9 @@ class Jumppad {
             ...options,
         }
         this.pos = pos
+
+        this.id = Math.random()*500
+
 
         this.heightDiff = 0
         this.makeJump

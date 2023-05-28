@@ -51,6 +51,10 @@ class Client {
                 this.game.renderer.levelTransistion(d.setLevel)
                 
             }
+            if (d.restartLevel) {
+                this.game.levelHandler.setLevel(mainGame.levelHandler.currentLevel.name)
+                
+            }
         }
     }
     updateKey(keycode, value) {

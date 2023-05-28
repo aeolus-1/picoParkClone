@@ -227,7 +227,7 @@ class Renderer {
                 cellsize = v(50,50)
             this.ctx.fillStyle = "#f50"
             let heightDiff = (
-                Math.sin(((new Date()).getTime()/50))*25
+                Math.sin((((new Date()).getTime()+jp.id)/50))*25
             )
             this.ctx.fillRect(((pos.x-0.5)*cellsize.x),((pos.y-0.5)*cellsize.y)-heightDiff,cellsize.x,cellsize.y+heightDiff)
             
