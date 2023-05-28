@@ -17,8 +17,9 @@ class TriggerHandler {
     }
     testTrigger(d) {
         let coll = d.testCollision()
+        
         if (coll.length>0) {
-            var playerBody = coll[0].bodyB.player?coll[0].bodyB:coll[0].bodyA
+            var playerBody = (coll[0].bodyB.player||coll[0].bodyB.isBlock)?coll[0].bodyB:coll[0].bodyA
             d.onIn(playerBody)
             d.playerInside = true
         } else {
@@ -57,6 +58,6 @@ class Trigger {
     }
     testCollision() {
         //console.log(Matter.Composite.allBodies(this.game.playerhandler.playerComp), this.rect)
-        return Matter.Query.collides(this.rect, Matter.Composite.allBodies(this.game.playerhandler.playerComp))
+        return Matter.Query.collides(this.rect, [...Matter.Composite.allBodies(this.game.playerhandler.playerComp),...Matter.Composite.allBodies(this.game.blockHandler.comp)])
     }
 }

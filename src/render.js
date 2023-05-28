@@ -373,7 +373,7 @@ class Renderer {
         for (let i = 0; i < this.game.lasers.length; i++) {
             const laser = this.game.lasers[i];
             let points = laser.cal()
-            this.renderLaser(points.start, points.end)
+            if (laser.enabled) this.renderLaser(points.start, points.end)
         }
     }
     renderLaser(start, end) {

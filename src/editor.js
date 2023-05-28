@@ -9,6 +9,23 @@ var height = 10
 canvas.width = width*32
 canvas.height = height*32
 
+function setCanvasSize() {
+    width = parseInt(document.getElementById("levelX").value)
+    height = parseInt(document.getElementById("levelY").value)
+    canvas.width = width*32
+    canvas.height = height*32
+    grid = []
+    
+
+
+    for(let a = 0; a < width; a++) {
+        grid.push([]) 
+        for(let b = 0; b < height; b++) {
+            grid[a][b] = b==height-1?"1":"0"
+        }
+    }
+}
+
 laserRotation = 1
 
 var grid = []

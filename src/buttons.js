@@ -4,6 +4,7 @@ class Button {
 
             onPress:()=>{},
             onPlayer:()=>{},
+            onUnpress:()=>{},
 
             ...options,
 
@@ -16,6 +17,7 @@ class Button {
             options.onPlayer(e)
         }
         this.onPress = options.onPress
+        this.onUnpress = options.onUnpress
         
         
 

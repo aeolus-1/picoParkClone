@@ -104,9 +104,8 @@ class Player {
 
         this.direction = 1
         this.scale = 1
-        console.log(this.game)
 
-        this.body = this.game.matter.addBody(v(200,this.game.players.length*50),v(40,46),{
+        this.body = this.game.matter.addBody(v(30,(this.game.players.length*50)),v(40,46),{
             ...options.bodyOptions,
             inertia:Infinity,
             
@@ -215,8 +214,8 @@ class Player {
         this.body.isStatic = false
 
         Matter.Body.setPosition(this.body, v(
-            100,
-            -this.game.renderer.offset.y+-20+(-i*50),
+            150,
+            (-this.game.renderer.offset.y+-20+(-i*50))-400,
             ))
             Matter.Body.setVelocity(this.body, v(
                 0,0

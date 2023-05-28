@@ -15,6 +15,8 @@ class Laser {
         this.pos = pos
         this.angle = angle
 
+        this.enabled = true
+
         this.axis = angle%2?"y":"x"
         this.axisX = this.axis=="x"?angle-3:0
         this.axisY = this.axis=="y"?angle-2:0
@@ -36,7 +38,7 @@ class Laser {
         this.killTrigger = this.game.triggerHandler.addTrigger(v(this.pos.x,this.pos.y), v(width,width),{
             onIn:(e)=>{
                 console.log("ya")
-                if (e.player) {
+                if (e.player&&this.enabled) {
                     e.player.restart()
                 }
             }

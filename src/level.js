@@ -22,10 +22,15 @@ class LevelHandler {
         this.game.constraints = []
         this.game.blocks = []
         this.game.lasers = []
+        this.game.jumppads = []
 
         Matter.Composite.remove(this.game.matter.engine.world, this.levelComp)
         this.levelComp = Matter.Composite.create()
         Matter.Composite.add(this.game.matter.engine.world, this.levelComp)
+
+        Matter.Composite.remove(this.game.matter.engine.world, this.game.jumppadHandler.comp)
+        this.game.jumppadHandler.comp = Matter.Composite.create()
+        Matter.Composite.add(this.game.matter.engine.world, this.game.jumppadHandler.comp)
         
         Matter.Composite.remove(this.game.matter.engine.world, this.game.blockHandler.comp)
         this.game.blockHandler.comp = Matter.Composite.create()
@@ -225,8 +230,9 @@ class LevelHandler {
         for (let i = 0; i < levelData.buttons.length; i++) {
             const but = levelData.buttons[i];
             let cellsize = this.game.levelHandler.currentLevel.cellsize
-            but.trigger = this.game.triggerHandler.addTrigger(v((but.pos.x-0)*cellsize.x,(but.pos.y-0)*cellsize.y),v(cellsize.x,cellsize.y))
+            but.trigger = this.game.triggerHandler.addTrigger(v((but.pos.x-0)*cellsize.x,(but.pos.y+0.25)*cellsize.y),v(cellsize.x,cellsize.y*0.5))
             but.trigger.onEnter = but.onPress
+            but.trigger.onLeave = but.onUnpress
             but.trigger.onIn = but.onIn
         }
         for (let i = 0; i < levelData.doors.length; i++) {

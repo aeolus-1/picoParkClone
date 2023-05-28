@@ -1,6 +1,8 @@
 class JumppadHandler {
     constructor(game) {
         this.game = game
+        this.comp = Matter.Composite.create()
+        Matter.Composite.add(this.game.matter.engine.world, this.comp)
     }
     updateJumppads() {
         let height = (
@@ -15,6 +17,7 @@ class JumppadHandler {
 class Jumppad {
     constructor(game, pos, options) {
         this.game = game
+        
         options = {
             ...options,
         }
@@ -23,10 +26,9 @@ class Jumppad {
         this.heightDiff = 0
         this.makeJump
 
-        this.rect = this.game.matter.addBody(v(pos.x*50,pos.y*50), v(50, 50), {})
+        this.rect = this.game.matter.addBody(v(pos.x*50,pos.y*50), v(50, 50), {}, this.game.jumppadHandler.comp)
         this.rect.isStatic = true
         this.rect.jumppad = true
-        Matter.Composite.add(this.game.matter.engine.world,this.rect)
 
         
     }
