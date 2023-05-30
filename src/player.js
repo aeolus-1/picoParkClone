@@ -247,19 +247,6 @@ class Player {
         if (this.body.position.y>=window.innerHeight*3) {
             this.restart()
 
-            if (this.game.playersBinded) {
-                for (let i = 0; i < this.game.players.length; i++) {
-                    const pla = this.game.players[i];
-                    Matter.Body.setPosition(pla.body, v(
-                        100,
-                        -60,
-                    ))
-                    Matter.Body.setVelocity(pla.body, v(
-                        pla.body.velocity.x*0.3,
-                        pla.body.velocity.y*0.3,
-                    ))
-                }
-            } else {
                 Matter.Body.setPosition(this.body, v(
                     100,
                     -60,
@@ -268,7 +255,7 @@ class Player {
                     this.body.velocity.x*0.3,
                     this.body.velocity.y*0.3,
                 ))
-            }
+            
         }
        
         let ground = this.getGround()
