@@ -41,6 +41,9 @@ class Client {
             if (d.playerData) {
                 this.updateHostPlayers(d.playerData)
             }
+            if (d.syncData) {
+                this.game.syncHandler.processSyncData(d.syncData)
+            }
             if (d.setColor) {
                 this.mainPlayer.color = d.setColor
             }

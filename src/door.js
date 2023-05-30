@@ -11,6 +11,8 @@ class Door {
         this.options = options
         this.pos = pos
 
+        this.id = Math.floor(Math.random()*100000)
+
         this.nextLevel = options.nextLevel
         
         this.open = options.open

@@ -6,8 +6,11 @@ class Block {
             static:false,
             ...options,
         }
+        this.options = options
         this.pos = pos
         this.size = size
+
+        this.id = Math.floor(Math.random()*100000)
 
         this.locked = ()=>{return Object.keys(this.pressing).length>options.minPlayers-1}
         this.playersNeeded = ()=>{return (options.minPlayers)-Object.keys(this.pressing).length}

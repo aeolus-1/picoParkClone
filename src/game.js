@@ -32,6 +32,9 @@ class Game {
         this.entityHandler = new EntityHandler(this)
         this.particleHandler = new ParticleHandler(this)
 
+
+        this.syncHandler = new SyncHandler(this)
+
         
 
         this.updateMobiles = function(self){
@@ -56,7 +59,11 @@ class Game {
         this.afterUpdateMobiles = function(self) {
             for (let i = 0; i < self.players.length; i++) {
                 const player = self.players[i];
-                player.updatePlayerParts()
+                if (player.unloading) {
+                    self.players.splice(i, 1)
+                } else {
+                    player.updatePlayerParts()
+                }
             }
         }
 
@@ -102,7 +109,135 @@ class Game {
             //addBody(v(0,500),v(2000,50),{isStatic:true,render:levelRender})
         
         
-        
+        this.syncHandler.addControl("keys", ()=>{
+            let es = []
+            for (let i = 0; i < this.entities.length; i++) {
+                const e = this.entities[i];
+                es.push( {
+                    pos:e.pos,
+                    vel:e.vel,
+                    id:e.id,
+                } )
+            }
+            return es
+            
+        }, (d)=>{
+            
+            var check = (id) => {
+                for (let i = 0; i < this.entities.length; i++) {
+                    const ent = this.entities[i];
+                    if (ent.id==id) {
+                        return ent
+                    }
+                }; return false
+            }
+            let key = d
+            
+            let foundEnt = check(key.id)
+            if (foundEnt) {
+                let ent = foundEnt
+                ent.pos = key.pos
+                ent.vel = key.vel
+            } else {
+                console.log("create keys")
+                var newKey = new Key(this, v(key.pos.x,key.pos.y), {})
+                newKey.id = key.id
+                this.entities.push(newKey)
+            }
+
+
+            
+        })
+        this.syncHandler.addControl("doors", ()=>{
+            let es = []
+            for (let i = 0; i < this.doors.length; i++) {
+                const e = this.doors[i];
+                es.push( {
+                    open:e.open,
+                    pos:e.pos,
+                    id:e.id,
+                } )
+            }
+            return es
+            
+        }, (d)=>{
+            
+            var check = (id) => {
+                for (let i = 0; i < this.doors.length; i++) {
+                    const ent = this.doors[i];
+                    if (ent.id==id) {
+                        return ent
+                    }
+                }; return false
+            }
+            let key = d
+            
+            let foundEnt = check(key.id)
+            if (foundEnt) {
+                let ent = foundEnt
+                ent.open = key.open
+                
+            } else {
+                console.log("create door")
+                let cellsize = v(50,50)
+                let dor = new Door(key.pos, {
+                    nextLevel: "one",
+                    open: key.open,
+                  })
+                  dor.trigger = this.triggerHandler.addTrigger(v((dor.pos.x-0.5)*cellsize.x,(dor.pos.y-1.5)*cellsize.y),v(cellsize.x*2,cellsize.y*2))
+                dor.id = key.id
+                this.doors.push(dor)
+                dor.game = this
+                
+            }
+
+
+            
+        })
+        this.syncHandler.addControl("blocks", ()=>{
+            let es = []
+            for (let i = 0; i < this.blocks.length; i++) {
+                const e = this.blocks[i];
+                es.push( {
+                    pos:e.rect.position,
+                    gridPos:e.pos,
+                    size:e.size,
+                    id:e.id,
+                    options:e.options,
+                } )
+            }
+            return es
+            
+        }, (d)=>{
+            
+            var check = (id) => {
+                for (let i = 0; i < this.blocks.length; i++) {
+                    const ent = this.blocks[i];
+                    if (ent.id==id) {
+                        return ent
+                    }
+                }; return false
+            }
+            let key = d
+            
+            let foundEnt = check(key.id)
+
+            if (foundEnt) {
+                let ent = foundEnt
+                Matter.Body.setPosition(ent.rect, key.pos)
+                
+            } else {
+                console.log("create block", key)
+                let block = this.blockHandler.addBlock(v(key.gridPos.x,key.gridPos.y), key.size, key.options)
+                block.id = key.id
+
+                
+            }
+
+
+            
+        })
+
         
         
 
@@ -135,7 +270,7 @@ class Game {
         if (this.runTemp) {
             this.levelHandler.loadLevel(levels.tempLevel, "tempLevel")
         } else {
-            this.levelHandler.setLevel("seven")
+            this.levelHandler.setLevel("four")
         }
 
         

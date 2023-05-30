@@ -232,7 +232,29 @@ class LevelHandler {
         makeParts(1)
         makeParts(-1)
 
-        
+        if (window.hostConnection) {
+            
+            for (let i = 0; i < levelData.doors.length; i++) {
+                const dor = levelData.doors[i];
+                dor.trigger = this.game.triggerHandler.addTrigger(v((dor.pos.x-0.5)*cellsize.x,(dor.pos.y-1.5)*cellsize.y),v(cellsize.x*2,cellsize.y*2))
+                this.game.doors.push(dor)
+                dor.game = this.game
+                dor.trigger.onIn = dor.onIn
+                dor.playerCount = this.game.players.length
+
+            }
+            
+            for (let i = 0; i < levelData.blocks.length; i++) {
+                const boc = levelData.blocks[i];
+                this.game.blockHandler.addBlock(v(boc.pos.x*50,boc.pos.y*50), boc.size, boc)
+
+            }
+            for (let i = 0; i < levelData.keys.length; i++) {
+                const key = levelData.keys[i];
+                var newKey = new Key(this.game, v(key.x*cellsize.x,key.y*cellsize.y), {})
+                this.game.entities.push(newKey)
+            }
+        }
         for (let i = 0; i < levelData.buttons.length; i++) {
             const but = levelData.buttons[i];
             let cellsize = this.game.levelHandler.currentLevel.cellsize
@@ -241,13 +263,10 @@ class LevelHandler {
             but.trigger.onLeave = but.onUnpress
             but.trigger.onIn = but.onIn
         }
-        for (let i = 0; i < levelData.doors.length; i++) {
-            const dor = levelData.doors[i];
-            dor.trigger = this.game.triggerHandler.addTrigger(v((dor.pos.x-0.5)*cellsize.x,(dor.pos.y-1.5)*cellsize.y),v(cellsize.x*2,cellsize.y*2))
-            this.game.doors.push(dor)
-            dor.game = this.game
-            dor.trigger.onIn = dor.onIn
-            dor.playerCount = this.game.players.length
+        for (let i = 0; i < levelData.jumppads.length; i++) {
+            const jp = levelData.jumppads[i];
+            let newJp = new Jumppad(this.game, v(jp.x,jp.y-2), {})
+            this.game.jumppads.push(newJp)
 
         }
         levelData.lasers = levelData.lasers||[]
@@ -258,22 +277,7 @@ class LevelHandler {
             this.game.lasers.push(newLaser)
 
         }
-        for (let i = 0; i < levelData.blocks.length; i++) {
-            const boc = levelData.blocks[i];
-            this.game.blockHandler.addBlock(v(boc.pos.x*50,boc.pos.y*50), boc.size, boc)
-
-        }
-        for (let i = 0; i < levelData.jumppads.length; i++) {
-            const jp = levelData.jumppads[i];
-            let newJp = new Jumppad(this.game, v(jp.x,jp.y-2), {})
-            this.game.jumppads.push(newJp)
-
-        }
-        for (let i = 0; i < levelData.keys.length; i++) {
-            const key = levelData.keys[i];
-            var newKey = new Key(this.game, v(key.x*cellsize.x,key.y*cellsize.y), {})
-            this.game.entities.push(newKey)
-        }
+        
     
     }
     

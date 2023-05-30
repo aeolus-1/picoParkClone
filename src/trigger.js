@@ -58,6 +58,6 @@ class Trigger {
     }
     testCollision() {
         //console.log(Matter.Composite.allBodies(this.game.playerhandler.playerComp), this.rect)
-        return Matter.Query.collides(this.rect, [...Matter.Composite.allBodies(this.game.playerhandler.playerComp),...Matter.Composite.allBodies(this.game.blockHandler.comp)])
+        return Matter.Query.collides(this.rect, [...Matter.Composite.allBodies(this.game.playerhandler.playerComp).filter(a=>{return !a.player.dead}),...Matter.Composite.allBodies(this.game.blockHandler.comp)])
     }
 }

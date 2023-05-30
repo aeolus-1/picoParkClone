@@ -103,7 +103,7 @@ class Host {
         var playerId = player.id
         var foundPlayer = findPlayerById(playerId)
         if (foundPlayer==undefined) {
-            console.log(player.id)
+            
 
             foundPlayer = mainGame.playerhandler.addPlayer({
                 bodyOptions:{
@@ -126,7 +126,14 @@ class Host {
     updateClients() {
         for (let i = 0; i < this.connections.length; i++) {
             const conn = this.connections[i];
-            if (conn.fullyConnected) conn.send(JSON.stringify({playerData:this.getPlayersData()}))
+            if (conn.fullyConnected) {
+                conn.send(
+                    JSON.stringify({
+                        playerData:this.getPlayersData(),
+                        syncData:this.game.syncHandler.getSyncData(),
+                    })
+                )
+            }
         }
     }
     getPlayersData() {

@@ -153,6 +153,10 @@ class Player {
         Matter.Body.scale(this.groundDetector, 1.45,0.5)
         
     }
+    unload() {
+        this.unloading = true
+        Matter.Composite.remove(this.game.playerhandler.playerComp, this.body)
+    }
     testForShield() {
         let a = [1,2,3,4]
         for (let i = 0; i < a.length; i++) {

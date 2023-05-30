@@ -560,7 +560,7 @@ var levels = {
         onPlayer:(e)=>{
             for (let i = 0; i < e.player.game.players.length; i++) {
                 const p = e.player.game.players[i];
-                p.restart()
+                p.kill()
             }
             
         }

@@ -23,6 +23,7 @@ class Entity {
         }
 
         this.pos = pos
+        this.id = Math.floor(Math.random()*10000)
     }
     update(){}
     render(){}
