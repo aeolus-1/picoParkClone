@@ -142,18 +142,19 @@ class Game {
     }
 
     bindPlayers(players) {
-        players = players.sort((a,b)=>{
+        let pla = players.sort((a,b)=>{
             return Math.sign((a.color).hashCode()-(b.color).hashCode())
         })
-        for (let i = 0; i < players.length-1; i++) {
-            const player = players[i];
+        console.log(pla)
+        for (let i = 0; i < pla.length; i++) {
+            let bodyB = pla[(i+1)%pla.length]
             this.constraintHandler.addConstraint({
-                bodyA:players[i],
-                bodyB:players[i+1],
+                bodyA:pla[i],
+                bodyB:bodyB,
             })
             this.constraintHandler.addConstraint({
-                bodyB:players[i],
-                bodyA:players[i+1],
+                bodyB:pla[i],
+                bodyA:bodyB,
             })
         }
         this.playersBinded = true

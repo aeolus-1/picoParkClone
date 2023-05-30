@@ -83,7 +83,6 @@ class Client {
 
             var foundPlayer = findPlayerById(playerId)
                 if (foundPlayer==undefined) {
-                    console.log(player.id)
 
                     foundPlayer = mainGame.playerhandler.addPlayer({
                         bodyOptions:{

@@ -284,7 +284,7 @@ function parsePlayerData(player) {
     color:player.color,
     scale:player.scale,
     ready:player.ready,
-    shields:player.hasShields,
+    shields:player.hasShield,
   }
 }
 
@@ -298,7 +298,7 @@ function setPlayerWithData(player,data,updatePhysics=true) {
   player.color = data.color
   player.frame = data.frame
   player.ready = data.ready
-  player.hasShields = data.shields
+  player.hasShield = data.shields
   player.setScale(data.scale)
 
 }

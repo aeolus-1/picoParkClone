@@ -66,7 +66,6 @@ class Host {
 
         connection.e.onData = (d)=>{
             d = JSON.parse(d)
-            console.log(d)
             if (d.player) {
                 this.updateClientBody(d.player, connection)
             }
