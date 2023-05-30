@@ -142,6 +142,9 @@ class Game {
     }
 
     bindPlayers(players) {
+        players = players.sort((a,b)=>{
+            return Math.sign(Number(a.color)-Number(b.color))
+        })
         for (let i = 0; i < players.length-1; i++) {
             const player = players[i];
             this.constraintHandler.addConstraint({

@@ -38,8 +38,8 @@ class Laser {
         this.killTrigger = this.game.triggerHandler.addTrigger(v(this.pos.x,this.pos.y), v(width,width),{
             onIn:(e)=>{
                 console.log("ya")
-                if (e.player&&this.enabled) {
-                    e.player.restart()
+                if (e.player&&this.enabled&&!e.player.dead) {
+                    e.player.kill()
                 }
             }
         })

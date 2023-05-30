@@ -254,6 +254,7 @@ class LevelHandler {
         for (let i = 0; i < levelData.lasers.length; i++) {
             const boc = levelData.lasers[i];
             let newLaser = new Laser(this.game, v(boc.pos.x*50,boc.pos.y*50), boc.angle,{})
+            newLaser.enabled = boc.enabled==undefined?true:boc.enabled
             this.game.lasers.push(newLaser)
 
         }

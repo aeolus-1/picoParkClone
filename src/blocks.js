@@ -14,7 +14,10 @@ class Block {
         this.pressing = {}
         this.minPlayers = options.minPlayers
         
-        this.rect = this.game.matter.addBody(pos, v(size.x*50, size.y*50), {}, this.game.blockHandler.comp)
+        this.rect = this.game.matter.addBody(v(
+            (pos.x-(0.5*50))+((size.x*50)/2),
+            (pos.y-(0.5*50))+((size.y*50)/2),
+        ), v(size.x*50, size.y*50), {}, this.game.blockHandler.comp)
         this.rect.isStatic = options.static
         this.rect.isBlock = true
         this.rect.block = this

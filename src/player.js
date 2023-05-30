@@ -48,7 +48,7 @@ class PlayerHandler {
         //if (window.clientConnection) if(window.clientConnection.mainPlayer.body.id==player.body.id) return true
 
         var walking = false
-        
+        if (!player.dead) {
         if (keys[c[0]]) {
             player.moveHor(-1)
             walking = true
@@ -59,15 +59,16 @@ class PlayerHandler {
             walking = true
         }
         if (walking) {
-            player.frame = !player.blockingDirection?"walking":"pushing"
+            if (!player.dead) player.frame = !player.blockingDirection?"walking":"pushing"
             
 
         } else if (player.onGround()) {
-            player.frame = "idle"
+            if (!player.dead) player.frame = "idle"
         } else {
-            player.frame = "falling"
+            if (!player.dead) player.frame = "falling"
         }
         if (keys[c[2]]) player.jump()
+    }
         
 
     }
@@ -208,10 +209,27 @@ class Player {
         this.ready = false
 
     }
+    kill() {
+        this.dead = true
+        this.frame = "dead"
+        this.body.collisionFilter = {
+            mask:0,
+            group:1,
+            mask:-1,
+        }
+        Matter.Body.setVelocity(this.body, v(this.body.velocity.x,-10))
+
+    }
     restart(i=0) {
+        this.dead = false
         this.ready = false
-        this.exitTimer = 60
         this.body.isStatic = false
+        this.body.collisionFilter = {
+            category: 1,
+            group: 0,
+            mask: 4294967295
+        }
+       
 
         Matter.Body.setPosition(this.body, v(
             150,
@@ -227,6 +245,8 @@ class Player {
     }
     testFalling() {
         if (this.body.position.y>=window.innerHeight*3) {
+            this.restart()
+
             if (this.game.playersBinded) {
                 for (let i = 0; i < this.game.players.length; i++) {
                     const pla = this.game.players[i];
@@ -263,14 +283,16 @@ class Player {
         
         
 
-        var falling = !this.onGround()
-        if (falling) {
-            this.frame = (Math.sign(this.body.velocity.y)>0)?"falling":"leaping"
-        } else if (this.preFalling) {
-            this.frame = "idle"
-        }
+       if (!this.dead) {
+            var falling = !this.onGround()
+            if (falling) {
+                this.frame = (Math.sign(this.body.velocity.y)>0)?"falling":"leaping"
+            } else if (this.preFalling) {
+                this.frame = "idle"
+            }
 
-        this.preFalling = falling
+            this.preFalling = falling
+        }
     }
 
     onGround() {

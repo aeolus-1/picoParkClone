@@ -186,7 +186,14 @@
                     
             }
         }
-
+        function setLevel(lvl) {
+    mainGame.renderer.levelTransistion(lvl)
+                            if (window.hostConnection) {
+                                hostConnection.broadcast(JSON.stringify({
+                                    setLevel:lvl,
+                                }))
+                            }
+}
        
     </script>
 

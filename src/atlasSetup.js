@@ -165,7 +165,17 @@ var sprites = {
                 size:v(40,46),
             },
         ]
-    }
+    },
+    "dead":{
+        count:1,
+        speed:10,
+        frames:[
+            {
+                pos:v(560,191),
+                size:v(40,46),
+            }
+        ]
+    },
     
 },
     colorMods = {
@@ -180,7 +190,7 @@ var sprites = {
     }
 
 function getSpritePosition(id, color, player) {
-
+    if (id=="dead") color = "red"
     var frameData = sprites[id],
         frameCount = frameData.count,
         offset = 0,
