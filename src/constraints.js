@@ -15,7 +15,7 @@ class ConstraintHandler {
         if (!bodyA.player.ready&&!bodyB.player.ready) {
 
             var dst = getDst(bodyA.position,bodyB.position),
-                forceStrength = Math.min(Math.max(Math.pow(dst/100,2),0),Infinity)*0.1,
+                forceStrength = Math.min(Math.max(Math.pow(dst/100,2),0),Infinity)*0.05,
                 angle = (-getAngle(bodyA.position,bodyB.position))-(90*(Math.PI/180))
 
             var forceVector = v(

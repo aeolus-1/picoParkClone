@@ -103,6 +103,8 @@ class Player {
         
         this.constraintVel = v()
 
+        
+
         this.direction = 1
         this.scale = 1
 
@@ -212,11 +214,7 @@ class Player {
     kill() {
         this.dead = true
         this.frame = "dead"
-        this.body.collisionFilter = {
-            mask:0,
-            group:1,
-            mask:-1,
-        }
+        
         Matter.Body.setVelocity(this.body, v(this.body.velocity.x,-10))
 
     }
@@ -224,11 +222,7 @@ class Player {
         this.dead = false
         this.ready = false
         this.body.isStatic = false
-        this.body.collisionFilter = {
-            category: 1,
-            group: 0,
-            mask: 4294967295
-        }
+        
        
 
         Matter.Body.setPosition(this.body, v(
@@ -266,6 +260,20 @@ class Player {
            }
 
        }
+       if (this.dead&&!this.preDead) {
+        this.body.collisionFilter = {
+            mask:0,
+            group:1,
+            mask:-1,
+        }
+       } else if (!this.dead&&this.preDead) {
+        this.body.collisionFilter = {
+            category: 1,
+            group: 0,
+            mask: 4294967295
+        }
+       }
+       this.preDead = this.dead
 
         
         
