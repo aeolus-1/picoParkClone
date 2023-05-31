@@ -12,6 +12,7 @@ class Connection {
       onOpening:()=>{},
       onDisconnection:()=>{},
       onData:()=>{},
+      onConnectionFail:()=>{},
     }
 
     this.send = (d)=>{
@@ -80,6 +81,8 @@ class Connection {
     });
     this.peer.on("destroyed", function () {
       console.error("peer destroyed")
+      this.connection.e.onDisconnection("disconnected")
+
       
     });
     this.peer.on("disconnected", function () {
@@ -97,6 +100,8 @@ class Connection {
       this.connection.online = false;
     });
     this.peer.on("error", function (err) {
+      this.connection.e.onConnectionFail()
+
       console.error("peer err",err)
     });
     
@@ -155,6 +160,7 @@ class Connection2W {
       onOpening:()=>{},
       onDisconnection:()=>{},
       onData:()=>{},
+      onConnectionFail:()=>{},
       
     }
 
@@ -221,6 +227,11 @@ class Connection2W {
         console.log("fullyConnected")
 
       }
+      
+    }
+    this.connT2S.e.onConnectionFail=()=>{
+      console.log("yay")
+      this.e.onConnectionFail()
     }
 
 

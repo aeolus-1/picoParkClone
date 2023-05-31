@@ -20,6 +20,13 @@ class Client {
         this.roomConn.e.onData = (d)=>{
             this.processData(d)
         }
+
+        this.roomConn.e.onConnectionFail = ()=>{
+            console.log("retrying")
+            this.init(roomId)
+            
+
+        }
     }
 
     processData(d,rd) {

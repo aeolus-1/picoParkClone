@@ -210,7 +210,7 @@ class Player {
         Matter.Body.setPosition(this.body, v(-1000,-100000000))
     }
     unReady() {
-        Matter.Body.setPosition(this.body, v(this.unreadyPos.x,this.unreadyPos.y))
+        if (this.unreadyPos) Matter.Body.setPosition(this.body, v(this.unreadyPos.x,this.unreadyPos.y))
         this.body.isStatic = false
         this.ready = false
 

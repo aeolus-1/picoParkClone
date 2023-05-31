@@ -668,7 +668,7 @@ var levels = {
     }),],keys:[
         v(19,7),],blocks:[],doors:[
     new Door(v(18,9),{
-        nextLevel:"one",
+        nextLevel:"sixteen",
         
     }),]
   },
@@ -770,7 +770,7 @@ new Door(v(12,11),{
 },],buttons:[],keys:[
     v(8,12),],blocks:[],doors:[
 new Door(v(8,14),{
-    nextLevel:"one",
+    nextLevel:"nineteen",
     
 }),]},
   nineteen:{jumppads:[],playersHaveShields:[],playersBinded:false,map:[
