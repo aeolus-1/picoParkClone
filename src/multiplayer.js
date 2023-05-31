@@ -13,6 +13,7 @@ class Connection {
       onDisconnection:()=>{},
       onData:()=>{},
       onConnectionFail:()=>{},
+      onClose:()=>{},
     }
 
     this.send = (d)=>{
@@ -81,7 +82,9 @@ class Connection {
     });
     this.peer.on("destroyed", function () {
       console.error("peer destroyed")
-      this.connection.e.onDisconnection("disconnected")
+      this.connection.online = false;
+
+      this.connection.e.onDisconnection("destroy")
 
       
     });
@@ -96,12 +99,14 @@ class Connection {
     });
     this.peer.on("close", function () {
       console.error("peer closed")
+      this.connection.e.onClose()
+
       this.connection.conn = null;
       this.connection.online = false;
     });
     this.peer.on("error", function (err) {
       this.connection.e.onConnectionFail()
-
+      this.connection.online = false
       console.error("peer err",err)
     });
     
@@ -112,7 +117,10 @@ class Connection {
     });
     this.conn.on("close", function () {
       console.error("peer closed")
+      this.connection.online = false
+      this.connection.e.onClose()
       this.conn = null;
+      
     });
   }
   join(id) {
@@ -161,6 +169,7 @@ class Connection2W {
       onDisconnection:()=>{},
       onData:()=>{},
       onConnectionFail:()=>{},
+      onClose:()=>{},
       
     }
 
@@ -197,6 +206,10 @@ class Connection2W {
       let self = this.connection.twC
       self.processData(d)
     }
+    this.connS2T.e.onClose=()=>{
+      
+      this.e.onClose()
+    }
 
     
     
@@ -213,7 +226,7 @@ class Connection2W {
           var newId = this.connection.twC.connS2T.lastPeerId
           this.connection.twC.connT2S.send(JSON.stringify({
             connectToNow:newId,
-            content:{},
+            content:JSON.stringify({}),
           }))
 
         }
@@ -230,8 +243,10 @@ class Connection2W {
       
     }
     this.connT2S.e.onConnectionFail=()=>{
-      console.log("yay")
       this.e.onConnectionFail()
+    }
+    this.connT2S.e.onClose=()=>{
+      this.e.onClose()
     }
 
 

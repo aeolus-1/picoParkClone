@@ -140,6 +140,8 @@ addEventListener("keydown", (e) => {
     if (e.key == "r") {
         laserRotation = (laserRotation%4)+1
         document.getElementById("laserRotation").textContent = laserRotation
+        selected = `laser|${laserRotation}`
+
     }
     if(selected!=undefined) {console.log(selected)}
     if(e.key == "Shift") {fill = true; document.getElementById("filling").innerHTML = "filling = true"}

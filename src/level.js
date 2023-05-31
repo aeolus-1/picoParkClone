@@ -76,6 +76,15 @@ class LevelHandler {
             (cellsize.x*0.5)+(-width*0.5),
             (cellsize.y*0.5)+(-height*0.5),
         )
+        this.game.renderer.levelBounds = {
+            pos:v(-25,-25),
+            size:v(
+                width,
+                height
+            )
+        }
+
+        this.game.renderer.resizeCanvas()
         for (let i = 0; i < this.game.players.length; i++) {
             const player = this.game.players[i];
             player.restart(i)
@@ -232,7 +241,7 @@ class LevelHandler {
         makeParts(1)
         makeParts(-1)
 
-        if (window.hostConnection) {
+        if (!window.clientConnection) {
             
             for (let i = 0; i < levelData.doors.length; i++) {
                 const dor = levelData.doors[i];

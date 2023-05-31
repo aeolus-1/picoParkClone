@@ -34,7 +34,7 @@ class SyncHandler {
             for (let j = 0; j < ob.length; j++) {
                 const individualOb = ob[j];
                 if (this.syncs[label]==undefined) {
-                    console.error("syncs arn't aligned")
+                    console.error("syncs arn't aligned for ", label)
                 } else {
                     this.syncs[label].returnData(individualOb)
                 }

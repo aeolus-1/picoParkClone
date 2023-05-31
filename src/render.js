@@ -10,11 +10,15 @@ class Renderer {
         this.fps = 0
 
         this.offset = v()
+        this.levelBounds = {pos:v(),size:v(100,100)}
 
         this.transistionSpeed = (localfile)?0.1:1
 
         this.fadeValue = 1
         this.displayedTitle = ""
+        
+        this.globalScale = 1
+        this.border = 80
 
         this.debug = localfile
         window.onresize = ()=>{this.resizeCanvas()}
@@ -71,6 +75,14 @@ class Renderer {
     resizeCanvas() {
         this.canvas.width = window.innerWidth
         this.canvas.height = window.innerHeight
+        if (this.levelBounds!=undefined) {
+            let minScale = Math.min(
+                    (this.canvas.width/(this.levelBounds.size.x+(this.border))),
+                    (this.canvas.height/(this.levelBounds.size.y+(this.border)))
+                )
+                
+            this.globalScale = minScale
+        }
     }
 
     init() {
@@ -88,8 +100,8 @@ class Renderer {
         self.clearCanvas()
         self.renderBackground()
         self.ctx.save()
-        self.ctx.translate(self.offset.x+(window.innerWidth*0.5),self.offset.y+(window.innerHeight*0.5))
-
+        self.ctx.translate(((self.offset.x)*this.globalScale)+(window.innerWidth*0.5),((self.offset.y)*this.globalScale)+(window.innerHeight*0.5))
+        self.ctx.scale(this.globalScale,this.globalScale)
         self.renderLevel(self.game.levelHandler)
         self.renderConstraints()
 
@@ -103,6 +115,18 @@ class Renderer {
         self.renderEntities()
         
         if (self.debug) self.renderTriggers()
+        if (self.debug) {
+            self.ctx.strokeStyle = "#f0f"
+
+            let boundsRect = self.levelBounds
+            self.ctx.strokeRect(
+                boundsRect.pos.x-5,
+                boundsRect.pos.y-5,
+                boundsRect.size.x+10,
+                boundsRect.size.y+10
+                )
+
+        }
         self.ctx.restore()
 
         if (self.debug) self.renderDebug()
@@ -116,7 +140,6 @@ class Renderer {
         let fade = Math.max(Math.min(this.fadeValue,1),0)
         this.ctx.globalAlpha = fade
         this.ctx.fillStyle = `rgb(255,255,255)`
-        //console.log(`rgba(255,255,255,${fade})`)
         this.ctx.fillRect(0,0,this.canvas.width,this.canvas.height)
         this.renderTitle()
     }
@@ -455,6 +478,7 @@ class Renderer {
         }
     }
     renderDebug() {
+        
         var strings = [
             "break",
             "v69.420",

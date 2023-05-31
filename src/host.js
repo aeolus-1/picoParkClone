@@ -59,6 +59,16 @@ class Host {
 
 
     }
+    closeConnection(conn) {
+        for (let i = 0; i < this.connections.length; i++) {
+            const conn2 = this.connections[i];
+            if(conn.selfId==conn2.selfId) {
+                conn.unloaded = true
+                this.connections.splice(i,1)
+                break
+            }
+        }
+    }
     openConnection() {
         var connection = new Connection2W()
 
@@ -67,7 +77,7 @@ class Host {
         connection.e.onData = (d)=>{
             d = JSON.parse(d)
             if (d.player) {
-                this.updateClientBody(d.player, connection)
+                connection.player = this.updateClientBody(d.player, connection)
             }
             if (d.setUsername) {
                 connection.clientUsername = d.setUsername
@@ -76,6 +86,15 @@ class Host {
         }
         connection.e.onConnection = (d)=>{
             document.getElementById("incoming").textContent = ""
+           
+            //addPlayerToMenu("yay")
+        }
+        connection.e.onClose = (d)=>{
+            console.log(connection)
+            connection.player.color = "red"
+            connection.player.unload()
+            this.closeConnection(connection)
+
            
             //addPlayerToMenu("yay")
         }
@@ -119,6 +138,8 @@ class Host {
 
         foundPlayer.conn = conn
         foundPlayer.keys = data.keys
+
+        return foundPlayer
     
     }
     

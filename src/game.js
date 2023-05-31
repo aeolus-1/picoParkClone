@@ -273,6 +273,8 @@ class Game {
             this.levelHandler.setLevel("one")
         }
 
+        this.running = true
+
         
     }
 
