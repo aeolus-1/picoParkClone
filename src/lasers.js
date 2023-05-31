@@ -38,7 +38,7 @@ class Laser {
         this.killTrigger = this.game.triggerHandler.addTrigger(v(this.pos.x,this.pos.y), v(width,width),{
             onIn:(e)=>{
                 console.log("ya")
-                if (e.player&&this.enabled&&!e.player.dead) {
+                if (e.player&&this.enabled&&!e.player.dead&&(!window.clientConnection)) {
                     e.player.kill()
                 }
             }

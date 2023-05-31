@@ -296,6 +296,7 @@ function parsePlayerData(player) {
     scale:player.scale,
     ready:player.ready,
     shields:player.hasShield,
+    dead:player.dead,
   }
 }
 
@@ -310,6 +311,7 @@ function setPlayerWithData(player,data,updatePhysics=true) {
   player.frame = data.frame
   player.ready = data.ready
   player.hasShield = data.shields
+  player.dead = data.dead
   player.setScale(data.scale)
 
 }
