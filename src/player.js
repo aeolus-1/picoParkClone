@@ -314,7 +314,7 @@ class Player {
             for (let i = 0; i < playersOnTop.length; i++) {
                 var bodyIs = (playersOnTop[i].bodyA.label!="Rectangle Body")?"bodyA":"bodyB"
                 var player = playersOnTop[i][bodyIs].player;
-                player.moveHor(dir, true)
+                if (!multi) player.moveHor(dir, true)
                 //player.moveHor(dir*diff)
             }
         }
