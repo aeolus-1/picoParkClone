@@ -42,6 +42,7 @@ class BlockHandler {
         for (let i = 0; i < this.game.blocks.length; i++) {
             const block = this.game.blocks[i];
             //console.log(block.pressing)
+            Matter.Body.setVelocity(block.rect, v(0,block.rect.velocity.y))
             block.pressing = {}
         }
     }

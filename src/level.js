@@ -101,7 +101,9 @@ class LevelHandler {
             for (let y = 1; y < horizontalMapWidth; y++) {
                 horizontalMap[y-1] = new Array()
                 for (let x = 0; x < horizontalMapHeight; x++) {
-                    horizontalMap[y-1][x] = (levelMap[x][y-1]^levelMap[x][y])&levelMap[x][y-Math.max(dir,0)]
+                    let forX = levelMap[x][y-1],
+                        curX = levelMap[x][y]
+                    horizontalMap[y-1][x] = (forX^curX)&levelMap[x][y-Math.max(dir,0)]
                 }
             }
 
