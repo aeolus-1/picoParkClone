@@ -109,7 +109,6 @@ class Renderer {
 
         for (let i = 0; i < self.game.players.length; i++) {
             const player = self.game.players[i];
-            console.log(player)
             self.renderPlayer(player)
         }
 
