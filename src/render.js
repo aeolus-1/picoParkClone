@@ -109,6 +109,7 @@ class Renderer {
 
         for (let i = 0; i < self.game.players.length; i++) {
             const player = self.game.players[i];
+            console.log(player)
             self.renderPlayer(player)
         }
 
@@ -502,14 +503,16 @@ class Renderer {
 
                         for (let i = 0; i < mapConn.length; i++) {
                             const mA = mapConn[i];
-                            returnArray = [...returnArray,
-                                "step",
-                                `username: ${connections[i].clientUsername}`,
-                                `color: ${connections[i].clientBody.color}`,
-                                `id: ${connections[i].clientBody.body.id}`,
-                                `ping: ${Math.floor(connections[i].lastPing*10)/10}ms`,
-                                `S2T connected: ${connections[i].connS2T.peer._open}; T2S connected: ${connections[i].connT2S.peer._open}`
-                            ]
+                            if (mA) if (mA.clientBody) {
+                                returnArray = [...returnArray,
+                                    "step",
+                                    `username: ${connections[i].clientUsername}`,
+                                    `color: ${connections[i].clientBody.color}`,
+                                    `id: ${connections[i].clientBody.body.id}`,
+                                    `ping: ${Math.floor(connections[i].lastPing*10)/10}ms`,
+                                    `S2T connected: ${connections[i].connS2T.peer._open}; T2S connected: ${connections[i].connT2S.peer._open}`
+                                ]
+                            }
                                 
                             
                         }

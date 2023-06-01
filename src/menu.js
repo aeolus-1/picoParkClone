@@ -5,6 +5,11 @@ function startGame() {
     document.getElementById("restartLevel").style.display = ""
     if (!mainGame.matter.running) {
         startMainGame()
+        setInterval(() => {
+            if (window.hostConnection) hostConnection.broadcast(JSON.stringify({
+                startGame:true,
+            }))
+        }, 3000);
     }
 
 }
